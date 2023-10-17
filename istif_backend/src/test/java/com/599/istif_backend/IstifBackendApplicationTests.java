@@ -1,4 +1,4 @@
-package com9.istif_backend;
+package com.istif_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
