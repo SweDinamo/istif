@@ -69,4 +69,14 @@ public class User extends BaseEntity{
     @ManyToMany(mappedBy = "followers", fetch = FetchType.LAZY,cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JsonIgnoreProperties({"followers", "email" , "password" , "biography" , "istif","following"})
     private Set<User> following = new HashSet<>();
+
+    @Column(name = "istif_likes")
+    private Set<Long> likedIstifs = new HashSet<>();
+
+    public Set<Long> getLikedIstifs() {
+        if(likedIstifs == null){
+            likedIstifs = new HashSet<>();
+        }
+        return likedIstifs;
+    }
 }
