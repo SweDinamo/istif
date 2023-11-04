@@ -16,4 +16,6 @@ public interface IstifRepository extends CrudRepository<Istif,Long> {
     List<Istif> findByTitleContainingIgnoreCase(String query);
 
     List<Istif> findByLabelsContainingIgnoreCase(String query);
+
+    List<Istif> findByCreatedAt(Date date);
 }
