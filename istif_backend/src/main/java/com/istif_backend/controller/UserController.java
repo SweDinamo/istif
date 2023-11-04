@@ -1,6 +1,5 @@
 package com.istif_backend.controller;
 
-import com.istif_backend.configuration.JwtUtil;
 import com.istif_backend.model.User;
 import com.istif_backend.request.FollowRequest;
 import com.istif_backend.request.LoginRequest;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +24,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Value("${REACT_APP_BACKEND_URL}")
-    private String REACT_APP_BACKEND_URL;
 
 
 
