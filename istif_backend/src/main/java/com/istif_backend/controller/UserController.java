@@ -5,6 +5,7 @@ import com.istif_backend.request.FollowRequest;
 import com.istif_backend.request.LoginRequest;
 import com.istif_backend.request.RegisterRequest;
 import com.istif_backend.request.UserUpdateRequest;
+import com.istif_backend.service.ImageService;
 import com.istif_backend.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/user")
@@ -24,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ImageService imageService;
 
 
 
@@ -92,9 +97,10 @@ public class UserController {
             return ResponseEntity.badRequest().body("Please select a file to upload!");
         }
         try {
-            byte[] uploadedPhoto = file.getBytes();
+            String uploadedPhoto = imageService.parseAndSaveImages(Arrays.toString(file.getBytes()));
+            byte[] parsedPhoto = file.getBytes();
             User foundUser = userService.validateTokenizedUser(request);
-            return ResponseEntity.ok(userService.updateUserPhoto(foundUser,uploadedPhoto));
+            return ResponseEntity.ok(userService.updateUserPhoto(foundUser,parsedPhoto));
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
