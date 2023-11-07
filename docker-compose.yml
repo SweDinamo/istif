@@ -1,0 +1,54 @@
+version: '3.7'
+services:
+  backend:
+    build:
+      context: ./istif_backend
+    container_name: istif-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./istif_frontend/.env
+    depends_on:
+      - db
+    volumes:
+      - backend-data:/path/to/backend/data
+    restart: always
+
+  frontend:
+    build:
+      context: ./istif_frontend
+    container_name: istif-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./istif_frontend/.env
+    depends_on:
+      - backend
+    restart: always
+
+  db:
+    image: postgres
+    restart: always
+    container_name: db
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./istif_frontend/.env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  backend-data:
+  db-data:
+
+#sudo su -
+#apt-get update
+#apt-get install docker-compose
+#apt-get install git
+#git clone https://github.com/hdenizdogan/SWE-599-Fall-2023
+#cd BOUN-SWE-599-Fall-2023/
+#cd istif/
+#cd istif_frontend/
+#nano .env (paste the necessary env variables here)
+#cd ..
+#docker compose up --build -d
