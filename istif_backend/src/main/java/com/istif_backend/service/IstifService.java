@@ -28,12 +28,22 @@ public class IstifService {
     @Autowired
     ImageService imageService;
 
+    private List<Istif> publicityCheck(List<Istif> istifList){
+        for (Istif istif:istifList) {
+            if(istif.getShareFlag() != 1){
+                istifList.remove(istif);
+            }
+        }
+        return istifList;
+    }
+
     public List<Istif> findAll(){
         return istifRepository.findAll();
     }
 
     public List<Istif> findAllByOrderByIdDesc(){
-        return istifRepository.findAllByOrderByIdDesc();
+        List<Istif> istifList = istifRepository.findAllByOrderByIdDesc();
+        return publicityCheck(istifList);
     }
 
     public Istif createIstif(User foundUser, IstifCreateRequest istifCreateRequest) throws ParseException, IOException {
@@ -42,6 +52,7 @@ public class IstifService {
                 .labels(istifCreateRequest.getLabels())
                 .text(imageService.parseAndSaveImages(istifCreateRequest.getText()))
                 .user(foundUser)
+                .shareFlag(istifCreateRequest.getShareFlag())
                 .createdAt(new Date())
                 .likes(new HashSet<>())
                 .build();
@@ -49,7 +60,7 @@ public class IstifService {
 
     }
 
-    public List<Istif> findAllStoriesByUserId(Long userId){
+    public List<Istif> findAllIstifsByUserId(Long userId){
         return istifRepository.findByUserId(userId);
     }
 
@@ -76,7 +87,7 @@ public class IstifService {
         for(Long id : idList){
             istifList.addAll(findByUserIdOrderByIdDesc(id));
         }
-        return istifList;
+        return publicityCheck(istifList);
 
     }
 
@@ -100,14 +111,14 @@ public class IstifService {
         return istifRepository.save(istif);
     }
 
-    public Set<Istif> searchStoriesWithQuery(String query) {
+    public Set<Istif> searchIstifsWithQuery(String query) {
         Set<Istif> istifSet = new HashSet<>();
         istifSet.addAll(istifRepository.findByTitleContainingIgnoreCase(query));
         istifSet.addAll(istifRepository.findByLabelsContainingIgnoreCase(query));
         return istifSet;
     }
 
-    public List<Istif> searchStoriesWithCreationDate(String createdAt) throws ParseException {
+    public List<Istif> searchIstifsWithCreationDate(String createdAt) throws ParseException {
         Date formattedDate = stringToDate(createdAt);
         return istifRepository.findByCreatedAt(formattedDate);
     }

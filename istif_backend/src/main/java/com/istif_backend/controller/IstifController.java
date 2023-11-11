@@ -72,10 +72,10 @@ public class IstifController {
             @RequestParam(required = false) String createdAt) throws ParseException {
         Set<Istif> istifSet = new HashSet<>();
         if(query != null){
-            istifSet.addAll(istifService.searchStoriesWithQuery(query));
+            istifSet.addAll(istifService.searchIstifsWithQuery(query));
         }
         if(createdAt != null){
-            istifSet.addAll(istifService.searchStoriesWithCreationDate(createdAt));
+            istifSet.addAll(istifService.searchIstifsWithCreationDate(createdAt));
         }
         if(istifSet.isEmpty()){
             Set<String> nullSet = new HashSet<>();
