@@ -1,38 +1,212 @@
-.App {
-  text-align: center;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.nav {
+  background-color: #417b5a;
+  color: #fff;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-evenly;
+  padding: 10px;
+}
+
+.logo {
+  width: 50px;
+  height: auto;
+}
+
+.nav-link {
+  margin-left: 10px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.istif-container {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  height: 100vh;
 }
 
-.App-link {
-  color: #61dafb;
+.istif-image {
+  max-width: 500px;
+  height: auto;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.profile-container {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+}
+
+.profile-photo {
+  max-width: 200px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.profile-username {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.profile-biography {
+  margin-bottom: 10px;
+}
+
+.follow-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.follow-button:hover {
+  background-color: #555;
+}
+
+.add-istif-form {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+}
+
+.add-istif-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.add-istif-form input[type="text"],
+.add-istif-form textarea {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.add-istif-form button[type="submit"] {
+  padding: 5px 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.add-istif-form button[type="submit"]:hover {
+  background-color: #555;
+}
+
+.istif-list {
+  margin: 20px;
+}
+
+.istif-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.istif-item h3 {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.istif-item p {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.istif-item a {
+  color: #333;
+  text-decoration: none;
+}
+
+.istif-item a:hover {
+  text-decoration: underline;
+}
+
+.istif-details {
+  margin: 20px;
+}
+
+.istif-details h1 {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.istif-details p {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.istif-details b {
+  font-weight: bold;
+}
+
+.istif-details ul {
+  margin: 0;
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.istif-details li {
+  margin-bottom: 5px;
+}
+
+.istif-details form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.istif-details textarea {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.istif-details button {
+  padding: 5px 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.istif-details button:hover {
+  background-color: #555;
+}
+
+.search-form {
+  margin: 20px;
+}
+
+.search-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.search-form input[type="text"] {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.search-form button[type="submit"] {
+  padding: 5px 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.search-form button[type="submit"]:hover {
+  background-color: #555;
+}
+
+.error {
+  color: red;
+  margin-bottom: 10px;
 }
