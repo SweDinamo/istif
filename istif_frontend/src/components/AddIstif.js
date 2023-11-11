@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "quill-emoji/dist/quill-emoji.css";
@@ -11,9 +10,14 @@ const AddIstifForm = () => {
   const [title, setTitle] = useState("");
   const [labels, setLabels] = useState("");
   const [text, setText] = useState("");
+  const [shareFlag, setShareFlag] = useState(0); // 0 for private, 1 for public
 
   const handleEditorChange = (value) => {
     setText(value);
+  };
+
+  const handleToggleChange = () => {
+    setShareFlag((prevFlag) => (prevFlag === 0 ? 1 : 0)); // Toggle between 0 and 1
   };
 
   const handleSubmit = async (event) => {
@@ -23,6 +27,7 @@ const AddIstifForm = () => {
       title,
       labels: labels.split(","),
       text,
+      shareFlag,
     };
 
     try {
@@ -66,7 +71,7 @@ const AddIstifForm = () => {
   return (
     <form className="add-istif-form" onSubmit={handleSubmit}>
       <label className="add-istif-label">
-        Title:
+        Link:
         <input
           type="text"
           className="add-istif-input"
@@ -86,7 +91,7 @@ const AddIstifForm = () => {
       </label>
       <br />
       <label className="add-istif-label">
-        Text:
+        Kept Notes:
         <ReactQuill
           value={text}
           onChange={handleEditorChange}
@@ -95,6 +100,16 @@ const AddIstifForm = () => {
           className="add-istif-editor"
         />
       </label>
+      <br />
+      <br />
+      <br />
+      <div className="slider-container">
+        <label className={`switch ${shareFlag === 1 ? "public" : "private"}`}>
+          <input type="checkbox" onChange={handleToggleChange} />
+          <span className="slider round"></span>
+        </label>
+        <p className="toggle-label">{shareFlag === 1 ? "Public!" : "Private!"}</p>
+      </div>
       <br />
       <button type="submit" className="add-istif-button">
         Add Istif

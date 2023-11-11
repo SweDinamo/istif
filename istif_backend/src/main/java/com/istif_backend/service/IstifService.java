@@ -28,22 +28,10 @@ public class IstifService {
     @Autowired
     ImageService imageService;
 
-    private List<Istif> publicityCheck(List<Istif> istifList){
-        for (Istif istif:istifList) {
-            if(istif.getShareFlag() != 1){
-                istifList.remove(istif);
-            }
-        }
-        return istifList;
-    }
-
-    public List<Istif> findAll(){
-        return istifRepository.findAll();
-    }
 
     public List<Istif> findAllByOrderByIdDesc(){
-        List<Istif> istifList = istifRepository.findAllByOrderByIdDesc();
-        return publicityCheck(istifList);
+        List<Istif> istifList = istifRepository.findByShareFlagOrderByCreatedAtDesc(1);
+        return istifList;
     }
 
     public Istif createIstif(User foundUser, IstifCreateRequest istifCreateRequest) throws ParseException, IOException {
@@ -58,10 +46,6 @@ public class IstifService {
                 .build();
         return istifRepository.save(createdIstif);
 
-    }
-
-    public List<Istif> findAllIstifsByUserId(Long userId){
-        return istifRepository.findByUserId(userId);
     }
 
     public List<Istif> findByUserIdOrderByIdDesc(Long userId){
@@ -85,9 +69,11 @@ public class IstifService {
             idList.add(user.getId());
         }
         for(Long id : idList){
-            istifList.addAll(findByUserIdOrderByIdDesc(id));
+            List<Istif> userIstifList = findByUserIdAndShareFlagOrderByIdDesc(id,1);
+            istifList.addAll(userIstifList);
         }
-        return publicityCheck(istifList);
+
+        return istifList;
 
     }
 
@@ -156,6 +142,7 @@ public class IstifService {
             enteredIstif.setLikes(istif.getLikes());
             enteredIstif.setId(istif.getId());
             enteredIstif.setComments(istif.getComments());
+            enteredIstif.setShareFlag(istif.getShareFlag());
             return istifRepository.save(enteredIstif);
         }
         return null;
@@ -171,5 +158,9 @@ public class IstifService {
             }
         }
         return istifList;
+    }
+
+    public List<Istif> findByUserIdAndShareFlagOrderByIdDesc(Long userId, int shareFlag){
+        return istifRepository.findByUserIdAndShareFlagOrderByIdDesc(userId,shareFlag);
     }
 }

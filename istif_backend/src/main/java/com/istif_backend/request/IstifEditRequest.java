@@ -13,4 +13,6 @@ public class IstifEditRequest {
     private String title;
 
     private ArrayList<String> labels = new ArrayList<>();
+
+    private Integer shareFlag;
 }
