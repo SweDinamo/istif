@@ -45,4 +45,6 @@ public class Istif extends BaseEntity{
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "UTC")
     private Date createdAt;
 
+    private Integer shareFlag = -1;
+
 }
