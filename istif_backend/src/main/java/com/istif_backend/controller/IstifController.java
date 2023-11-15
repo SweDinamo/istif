@@ -84,7 +84,7 @@ public class IstifController {
         }
         return ResponseEntity.ok(Objects.requireNonNullElse(istifSet, "No istifs with this search is found!"));
     }
-    @PostMapping("/like/")
+    @PostMapping("/like")
     public ResponseEntity<?> likeIstif(@RequestBody LikeRequest likeRequest, HttpServletRequest request){
         User tokenizedUser = userService.validateTokenizedUser(request);
         return ResponseEntity.ok(istifService.likeIstif(likeRequest.getLikedEntityId(),tokenizedUser.getId()));
