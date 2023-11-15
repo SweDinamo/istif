@@ -19,7 +19,7 @@ services:
       context: ./istif_frontend
     container_name: istif-frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     env_file:
       - ./istif_frontend/.env
     depends_on:
