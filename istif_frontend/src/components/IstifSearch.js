@@ -8,25 +8,22 @@ const IstifSearch = () => {
   const [searchDate, setSearchDate] = useState({ type: null, value: null });
 
   const handleSearch = useCallback(async () => {
-    if (searchQuery && searchQuery.length < 4) {
-      return;
-    }
 
     try {
-      let startDate = null;
+      let searchedDate = null;
 
       switch (searchDate.type) {
         case "absolute-date":
-          startDate = searchDate.value;
+          searchedDate = searchDate.value;
           break;
         case "interval-date":
-          startDate = searchDate.value.startDate;
+          searchedDate = searchDate.value.searchedDate;
           break;
         case "absolute-year":
-          startDate = `${searchDate.value}-01-01`;
+          searchedDate = `${searchDate.value}-01-01`;
           break;
         case "interval-year":
-          startDate = `${searchDate.value.startDate}-01-01`;
+          searchedDate = `${searchDate.value.searchedDate}`;
           break;
         default:
           break;
@@ -37,7 +34,7 @@ const IstifSearch = () => {
         {
           params: {
             query: searchQuery,
-            startTimeStamp: startDate,
+            date: searchedDate,
           },
           withCredentials: true,
         }
@@ -49,7 +46,7 @@ const IstifSearch = () => {
     }
   }, [
     searchQuery,
-    searchDate,
+    searchDate
   ]);
 
   useEffect(() => {
@@ -98,27 +95,14 @@ const IstifSearch = () => {
         {searchDate.type === "interval-date" && (
           <>
             <label>
-              Start Date:
+              Date:
               <input
                 type="date"
-                value={searchDate.value?.startDate || ""}
+                value={searchDate.value?.searchedDate || ""}
                 onChange={(e) =>
                   setSearchDate({
                     ...searchDate,
-                    value: { ...searchDate.value, startDate: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <label>
-              End Date:
-              <input
-                type="date"
-                value={searchDate.value?.endDate || ""}
-                onChange={(e) =>
-                  setSearchDate({
-                    ...searchDate,
-                    value: { ...searchDate.value, endDate: e.target.value },
+                    value: { ...searchDate.value, searchedDate: e.target.value },
                   })
                 }
               />
@@ -143,11 +127,11 @@ const IstifSearch = () => {
               Start Year:
               <input
                 type="number"
-                value={searchDate.value?.startDate || ""}
+                value={searchDate.value?.searchedDate || ""}
                 onChange={(e) =>
                   setSearchDate({
                     ...searchDate,
-                    value: { ...searchDate.value, startDate: e.target.value },
+                    value: { ...searchDate.value, searchedDate: e.target.value },
                   })
                 }
               />
@@ -156,11 +140,11 @@ const IstifSearch = () => {
               End Year:
               <input
                 type="number"
-                value={searchDate.value?.endDate || ""}
+                value={searchDate.value?.relevant || ""}
                 onChange={(e) =>
                   setSearchDate({
                     ...searchDate,
-                    value: { ...searchDate.value, endDate: e.target.value },
+                    value: { ...searchDate.value, relevant: e.target.value },
                   })
                 }
               />

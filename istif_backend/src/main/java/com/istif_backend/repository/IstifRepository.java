@@ -9,7 +9,6 @@ import java.util.List;
 public interface IstifRepository extends CrudRepository<Istif,Long> {
     List<Istif> findAll();
     List<Istif> findAllByOrderByIdDesc();
-    List<Istif> findByUserId(Long userId);
 
     List<Istif> findByUserIdOrderByIdDesc(Long userId);
 
@@ -17,9 +16,11 @@ public interface IstifRepository extends CrudRepository<Istif,Long> {
 
     List<Istif> findByLabelsContainingIgnoreCase(String query);
 
-    List<Istif> findByCreatedAt(Date date);
-
     List<Istif> findByShareFlagOrderByCreatedAtDesc(int shareFlag);
 
     List<Istif> findByUserIdAndShareFlagOrderByIdDesc(Long userId, int shareFlag);
+
+    List<Istif> findByCreatedAtBetween(Date startDate, Date endDate);
+
+    List<Istif> findByRelevantDateBetween(Date formattedStartDate, Date formattedEndDate);
 }

@@ -104,9 +104,56 @@ public class IstifService {
         return istifSet;
     }
 
-    public List<Istif> searchIstifsWithCreationDate(String createdAt) throws ParseException {
-        Date formattedDate = stringToDate(createdAt);
-        return istifRepository.findByCreatedAt(formattedDate);
+    public List<Istif> searchIstifsWithDate(String date) throws ParseException {
+        Date formattedDate = stringToDate(date);
+        Date startDate = setToMidnight(formattedDate);
+        Date endDate = setToEndOfDay(formattedDate);
+        if (date.contains("01-01")){
+            endDate = setToLastDayOfYear(formattedDate);
+        }
+        Set <Istif> results = new HashSet<>();
+        results.addAll(istifRepository.findByCreatedAtBetween(startDate,endDate));
+        results.addAll(istifRepository.findByRelevantDateBetween(startDate,endDate));
+        return results.stream().toList();
+    }
+
+    private Date setToMidnight(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
+    }
+
+    private Date setToEndOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+
+        return calendar.getTime();
+    }
+
+    private Date setToLastDayOfYear(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        calendar.set(Calendar.DAY_OF_MONTH, 31);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+
+        return calendar.getTime();
     }
 
     public String deleteByIstifId(Istif istif) {
@@ -120,7 +167,13 @@ public class IstifService {
 
     public Date stringToDate(String timeStamp) throws ParseException{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.parse(timeStamp);
+        try {
+            return dateFormat.parse(timeStamp);
+        } catch (ParseException e) {
+            dateFormat = new SimpleDateFormat("yyyy-01-01");
+            String yearStamp = timeStamp.concat("-01-01");
+            return dateFormat.parse(yearStamp);
+        }
     }
 
     public Istif enterIstif(User foundUser, IstifEditRequest istifEditRequest) throws ParseException, IOException {
