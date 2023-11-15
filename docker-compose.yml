@@ -47,7 +47,6 @@ volumes:
 #apt-get install git
 #git clone https://github.com/hdenizdogan/SWE-599-Fall-2023
 #cd BOUN-SWE-599-Fall-2023/
-#cd istif/
 #cd istif_frontend/
 #nano .env (paste the necessary env variables here)
 #cd ..
