@@ -14,24 +14,19 @@ const IstifSearch = () => {
 
     try {
       let startDate = null;
-      let endDate = null;
 
       switch (searchDate.type) {
         case "absolute-date":
           startDate = searchDate.value;
-          endDate = searchDate.value;
           break;
         case "interval-date":
           startDate = searchDate.value.startDate;
-          endDate = searchDate.value.endDate;
           break;
         case "absolute-year":
           startDate = `${searchDate.value}-01-01`;
-          endDate = `${searchDate.value}-12-31`;
           break;
         case "interval-year":
           startDate = `${searchDate.value.startDate}-01-01`;
-          endDate = `${searchDate.value.endDate}-12-31`;
           break;
         default:
           break;

@@ -65,7 +65,7 @@ function IstifDetails() {
   const handleLikeIstif = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/istif/like/`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/istif/like`,
         { likedEntityId: istif.id },
         {
           withCredentials: true,
@@ -79,7 +79,7 @@ function IstifDetails() {
   const handleLikeComment = async (commentId) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/comment/like/`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/comment/like`,
         { likedEntityId: commentId },
         {
           withCredentials: true,
@@ -121,12 +121,6 @@ function IstifDetails() {
       <b>Written by:</b>
       <a href={"/user/" + istif.user.id}>{istif.user.username}</a>
       <p>
-        <b>Start Date:</b> {istif.startTimeStamp}
-      </p>
-      <p>
-        <b>End Date:</b> {istif.endTimeStamp}
-      </p>
-      <p>
         <b>Published at: </b>
         {formatDate(istif.createdAt)}
       </p>
@@ -138,14 +132,6 @@ function IstifDetails() {
         <b>Decade:</b>
         {istif.decade}
       </p>
-      <label>
-        <b>Selected Locations:</b>
-        <ul className="locations-list">
-          {istif.locations.map((location) => (
-            <li key={location.id}>{location.locationName}</li>
-          ))}
-        </ul>
-      </label>
       <p>
         <b>Comments:</b>
       </p>
