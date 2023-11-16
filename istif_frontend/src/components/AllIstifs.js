@@ -38,9 +38,10 @@ function AllIstifs() {
       {allIstifs.map((istif) => (
         <div key={istif.id} className="istif">
           <h2 className="istif-title">
+            <b>Title: </b>
             <a href={"/istif/" + istif.id}>{istif.title}</a>
           </h2>
-          <p className="istif-title">
+          <p className="istif-details">
             <b>Text:</b> {parse(istif.text)}
           </p>
           <p className="istif-details">

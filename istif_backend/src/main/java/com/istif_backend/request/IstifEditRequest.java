@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -13,11 +14,12 @@ public class IstifEditRequest {
     private String text;
 
     private String title;
+    private String header;
 
     private ArrayList<String> labels = new ArrayList<>();
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC+3")
-    private Date relevantDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate relevantDate;
 
     private Integer shareFlag;
 }

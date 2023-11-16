@@ -105,7 +105,13 @@ function IstifDetails() {
 
   return (
     <div className="all-istifs">
-      <h1>Title: {istif.title}</h1>
+      <h1>Title: {parse(istif.title)}</h1>
+      <h1>
+        Link:{" "}
+        <a href={istif.titleLink} target="_blank" rel="noopener noreferrer">
+          {istif.titleLink}
+        </a>
+      </h1>
       <p>
         <b>Istif:</b>
         <p></p>
@@ -125,12 +131,8 @@ function IstifDetails() {
         {formatDate(istif.createdAt)}
       </p>
       <p>
-        <b>Season:</b>
-        {istif.season}
-      </p>
-      <p>
-        <b>Decade:</b>
-        {istif.decade}
+        <b>Relevant Date: </b>
+        {istif.relevantDate}
       </p>
       <p>
         <b>Comments:</b>

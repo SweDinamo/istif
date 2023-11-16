@@ -6,6 +6,8 @@ import com.istif_backend.model.User;
 import com.istif_backend.repository.IstifRepository;
 import com.istif_backend.request.IstifCreateRequest;
 import com.istif_backend.request.IstifEditRequest;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +38,14 @@ public class IstifService {
 
     public Istif createIstif(User foundUser, IstifCreateRequest istifCreateRequest) throws ParseException, IOException {
         Istif createdIstif = Istif.builder()
-                .title(istifCreateRequest.getTitle())
+                .title(fetchTitle(istifCreateRequest.getTitle()))
+                .titleLink(istifCreateRequest.getTitle())
                 .labels(istifCreateRequest.getLabels())
                 .text(imageService.parseAndSaveImages(istifCreateRequest.getText()))
                 .user(foundUser)
                 .shareFlag(istifCreateRequest.getShareFlag())
                 .createdAt(new Date())
+                .relevantDate(istifCreateRequest.getRelevantDate())
                 .likes(new HashSet<>())
                 .build();
         return istifRepository.save(createdIstif);
@@ -178,7 +182,8 @@ public class IstifService {
 
     public Istif enterIstif(User foundUser, IstifEditRequest istifEditRequest) throws ParseException, IOException {
         return Istif.builder()
-                .title(istifEditRequest.getTitle())
+                .title(fetchTitle(istifEditRequest.getTitle()))
+                .titleLink(istifEditRequest.getTitle())
                 .labels(istifEditRequest.getLabels())
                 .text(imageService.parseAndSaveImages(istifEditRequest.getText()))
                 .user(foundUser)
@@ -215,5 +220,14 @@ public class IstifService {
 
     public List<Istif> findByUserIdAndShareFlagOrderByIdDesc(Long userId, int shareFlag){
         return istifRepository.findByUserIdAndShareFlagOrderByIdDesc(userId,shareFlag);
+    }
+
+    public String fetchTitle(String url) {
+        try {
+            Document document = Jsoup.connect(url).get();
+            return document.title();
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

@@ -38,7 +38,8 @@ function FollowedUserIstifs() {
       {followedUserIstifs.map((istif) => (
         <div key={istif.id} className="istif">
           <h2 className="istif-title">
-            <a href={"/istif/" + istif.id}>{istif.title}</a>
+            <b>Title: </b>
+            <a href={"/istif/" + istif.id}>{istif.titleLink}</a>
           </h2>
           <p className="istif-title">
             <b>Text:</b> {parse(istif.text)}

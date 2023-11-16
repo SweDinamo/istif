@@ -3,18 +3,26 @@ import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "quill-emoji/dist/quill-emoji.css";
-import "react-datetime-picker/dist/DateTimePicker.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./css/AddIstif.css";
 
 const AddIstifForm = () => {
   const [title, setTitle] = useState("");
   const [labels, setLabels] = useState("");
   const [text, setText] = useState("");
+  const [relevantDate,setRelevantDate] = useState(null);
   const [shareFlag, setShareFlag] = useState(0); // 0 for private, 1 for public
 
   const handleEditorChange = (value) => {
     setText(value);
   };
+  const handleTitleChange = (value) => {
+    setTitle(value);
+  };
+
+
+
 
   const handleToggleChange = () => {
     setShareFlag((prevFlag) => (prevFlag === 0 ? 1 : 0)); // Toggle between 0 and 1
@@ -27,6 +35,7 @@ const AddIstifForm = () => {
       title,
       labels: labels.split(","),
       text,
+      relevantDate,
       shareFlag,
     };
 
@@ -68,6 +77,10 @@ const AddIstifForm = () => {
     "image",
   ];
 
+  const handleRelevantDateChange = (date) => {
+    setRelevantDate(date);
+  };
+
   return (
     <form className="add-istif-form" onSubmit={handleSubmit}>
       <label className="add-istif-label">
@@ -76,7 +89,7 @@ const AddIstifForm = () => {
           type="text"
           className="add-istif-input"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => handleTitleChange(e.target.value)}
         />
       </label>
       <br />
@@ -103,12 +116,26 @@ const AddIstifForm = () => {
       <br />
       <br />
       <br />
+      <label className="add-story-label">
+        Relevant Date for Istif:
+        <DatePicker
+          selected={relevantDate}
+          onChange={handleRelevantDateChange}
+          dateFormat="yyyy-MM-dd"
+          className="add-istif-datepicker"
+        />
+      </label>
+      <br />
+      <br />
+      <br />
       <div className="slider-container">
         <label className={`switch ${shareFlag === 1 ? "public" : "private"}`}>
           <input type="checkbox" onChange={handleToggleChange} />
           <span className="slider round"></span>
         </label>
-        <p className="toggle-label">{shareFlag === 1 ? "Public!" : "Private!"}</p>
+        <p className="toggle-label">
+          {shareFlag === 1 ? "Public!" : "Private!"}
+        </p>
       </div>
       <br />
       <button type="submit" className="add-istif-button">

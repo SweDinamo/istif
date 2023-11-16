@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -25,6 +26,8 @@ public class Istif extends BaseEntity{
     @NotBlank
     private String title;
 
+    private String titleLink;
+
     @ElementCollection
     @Column
     private List<String> labels = new ArrayList<>();
@@ -42,12 +45,12 @@ public class Istif extends BaseEntity{
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "UTC+3")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Istanbul")
     private Date createdAt;
 
     @Column(name = "relevant_date")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC+3")
-    private Date relevantDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate relevantDate;
 
     private Integer shareFlag = -1;
 

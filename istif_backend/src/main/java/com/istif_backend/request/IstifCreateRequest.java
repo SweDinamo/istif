@@ -3,7 +3,9 @@ package com.istif_backend.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -14,8 +16,7 @@ public class IstifCreateRequest {
     private String title;
     private ArrayList<String> labels = new ArrayList<>();
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC+3")
-    private Date relevantDate;
+    private LocalDate relevantDate;
 
     private Integer shareFlag;
 }
