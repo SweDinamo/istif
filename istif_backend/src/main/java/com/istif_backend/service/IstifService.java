@@ -229,9 +229,6 @@ public class IstifService {
     }
 
     public String fetchTitle(String url) {
-        if(!url.contains("https://")){
-            url = "https://"+url;
-        }
         try {
             Document document = Jsoup.connect(url).get();
             return document.title();
