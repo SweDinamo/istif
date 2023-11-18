@@ -27,7 +27,7 @@ const IstifSearch = () => {
           break;
         case "absolute-year":
           searchedDate = `${searchDate.value}-01-01`;
-          searchedEndDate = null;
+          searchedEndDate = `${searchDate.value}-12-31`;
           break;
         case "interval-year":
           searchedDate = `${searchDate.value.start}-01-01`;
