@@ -4,25 +4,36 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "quill-emoji/dist/quill-emoji.css";
 import DatePicker from "react-datepicker";
+import { format } from "date-fns"; // Import the date-fns format function
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/AddIstif.css";
 
 const AddIstifForm = () => {
-  const [title, setTitle] = useState("");
+  const [titleLink, setTitleLink] = useState("");
   const [labels, setLabels] = useState("");
   const [text, setText] = useState("");
-  const [relevantDate,setRelevantDate] = useState(null);
+  const [relevantDate, setRelevantDate] = useState(null);
   const [shareFlag, setShareFlag] = useState(0); // 0 for private, 1 for public
 
   const handleEditorChange = (value) => {
     setText(value);
   };
-  const handleTitleChange = (value) => {
-    setTitle(value);
-  };
 
+   const handleTitleLinkChange = (value) => {
+     if (
+       value &&
+       !value.startsWith("http://") &&
+       !value.startsWith("https://")
+     ) {
+       value = "https://" + value;
+     }
 
+     if (value && !value.includes("www.")) {
+       value = value.replace("https://", "https://www.");
+     }
 
+     setTitleLink(value);
+   };
 
   const handleToggleChange = () => {
     setShareFlag((prevFlag) => (prevFlag === 0 ? 1 : 0)); // Toggle between 0 and 1
@@ -31,11 +42,15 @@ const AddIstifForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const formattedRelevantDate = relevantDate
+      ? format(relevantDate, "yyyy-MM-dd")
+      : null;
+
     const istif = {
-      title,
+      titleLink,
       labels: labels.split(","),
       text,
-      relevantDate,
+      relevantDate: formattedRelevantDate,
       shareFlag,
     };
 
@@ -88,8 +103,8 @@ const AddIstifForm = () => {
         <input
           type="text"
           className="add-istif-input"
-          value={title}
-          onChange={(e) => handleTitleChange(e.target.value)}
+          value={titleLink}
+          onChange={(e) => handleTitleLinkChange(e.target.value)}
         />
       </label>
       <br />
@@ -121,7 +136,7 @@ const AddIstifForm = () => {
         <DatePicker
           selected={relevantDate}
           onChange={handleRelevantDateChange}
-          dateFormat="yyyy-MM-dd"
+          dateFormat="dd/MM/yyyy"
           className="add-istif-datepicker"
         />
       </label>

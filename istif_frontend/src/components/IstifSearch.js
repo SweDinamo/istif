@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import axios from "axios";
 import "./css/IstifSearch.css";
 
@@ -6,24 +6,32 @@ const IstifSearch = () => {
   const [searchQuery, setSearchQuery] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [searchDate, setSearchDate] = useState({ type: null, value: null });
+  const [secondSearchDate, setSecondSearchDate] = useState({
+    type: null,
+    value: null,
+  });
 
   const handleSearch = useCallback(async () => {
-
     try {
       let searchedDate = null;
+      let searchedEndDate = null;
 
       switch (searchDate.type) {
         case "absolute-date":
           searchedDate = searchDate.value;
+          searchedEndDate = null;
           break;
         case "interval-date":
-          searchedDate = searchDate.value.searchedDate;
+          searchedDate = searchDate.value?.searchedDate;
+          searchedEndDate = secondSearchDate.value?.searchedDate || null;
           break;
         case "absolute-year":
           searchedDate = `${searchDate.value}-01-01`;
+          searchedEndDate = null;
           break;
         case "interval-year":
-          searchedDate = `${searchDate.value.searchedDate}`;
+          searchedDate = `${searchDate.value.start}-01-01`;
+          searchedEndDate = `${secondSearchDate.value.end}-01-01` || null;
           break;
         default:
           break;
@@ -34,7 +42,8 @@ const IstifSearch = () => {
         {
           params: {
             query: searchQuery,
-            date: searchedDate,
+            startDate: searchedDate,
+            endDate: searchedEndDate,
           },
           withCredentials: true,
         }
@@ -44,18 +53,12 @@ const IstifSearch = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [
-    searchQuery,
-    searchDate
-  ]);
-
-  useEffect(() => {
-    handleSearch();
-  }, [handleSearch, searchDate]);
+  }, [searchQuery, searchDate, secondSearchDate]);
 
   const handleDateTypeChange = (event) => {
     const type = event.target.value;
     setSearchDate({ type, value: null });
+    setSecondSearchDate({ type, value: null });
   };
 
   return (
@@ -95,14 +98,33 @@ const IstifSearch = () => {
         {searchDate.type === "interval-date" && (
           <>
             <label>
-              Date:
+              Start Date:
               <input
                 type="date"
                 value={searchDate.value?.searchedDate || ""}
                 onChange={(e) =>
                   setSearchDate({
                     ...searchDate,
-                    value: { ...searchDate.value, searchedDate: e.target.value },
+                    value: {
+                      ...searchDate.value,
+                      searchedDate: e.target.value,
+                    },
+                  })
+                }
+              />
+            </label>
+            <label>
+              End Date:
+              <input
+                type="date"
+                value={secondSearchDate.value?.searchedDate || ""}
+                onChange={(e) =>
+                  setSecondSearchDate({
+                    ...secondSearchDate,
+                    value: {
+                      ...secondSearchDate.value,
+                      searchedDate: e.target.value,
+                    },
                   })
                 }
               />
@@ -127,11 +149,11 @@ const IstifSearch = () => {
               Start Year:
               <input
                 type="number"
-                value={searchDate.value?.searchedDate || ""}
+                value={searchDate.value?.start || ""}
                 onChange={(e) =>
                   setSearchDate({
                     ...searchDate,
-                    value: { ...searchDate.value, searchedDate: e.target.value },
+                    value: { ...searchDate.value, start: e.target.value },
                   })
                 }
               />
@@ -140,11 +162,11 @@ const IstifSearch = () => {
               End Year:
               <input
                 type="number"
-                value={searchDate.value?.relevant || ""}
+                value={secondSearchDate.value?.end || ""}
                 onChange={(e) =>
-                  setSearchDate({
-                    ...searchDate,
-                    value: { ...searchDate.value, relevant: e.target.value },
+                  setSecondSearchDate({
+                    ...secondSearchDate,
+                    value: { ...secondSearchDate.value, end: e.target.value },
                   })
                 }
               />

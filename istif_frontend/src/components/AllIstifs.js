@@ -57,6 +57,9 @@ function AllIstifs() {
           <p className="istif-details">
             <b>Published at:</b> {formatDate(istif.createdAt)}
           </p>
+          <p className="istif-details">
+            <b>Relevant Date:</b> {istif.relevantDate}
+          </p>
         </div>
       ))}
     </div>

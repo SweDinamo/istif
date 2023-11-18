@@ -47,7 +47,7 @@ public class UserService {
                 return cookie.getValue();
             }
         }
-        throw new IllegalArgumentException("Bearer value cannot be null");
+        return "Bearer value cannot be null";
     }
 
     public User validateTokenizedUser(HttpServletRequest request){

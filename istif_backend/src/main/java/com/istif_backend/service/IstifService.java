@@ -38,8 +38,8 @@ public class IstifService {
 
     public Istif createIstif(User foundUser, IstifCreateRequest istifCreateRequest) throws ParseException, IOException {
         Istif createdIstif = Istif.builder()
-                .title(fetchTitle(istifCreateRequest.getTitle()))
-                .titleLink(istifCreateRequest.getTitle())
+                .title(fetchTitle(istifCreateRequest.getTitleLink()))
+                .titleLink(istifCreateRequest.getTitleLink())
                 .labels(istifCreateRequest.getLabels())
                 .text(imageService.parseAndSaveImages(istifCreateRequest.getText()))
                 .user(foundUser)
@@ -109,15 +109,20 @@ public class IstifService {
     }
 
     public List<Istif> searchIstifsWithDate(String date) throws ParseException {
-        Date formattedDate = stringToDate(date);
-        Date startDate = setToMidnight(formattedDate);
-        Date endDate = setToEndOfDay(formattedDate);
-        if (date.contains("01-01")){
-            endDate = setToLastDayOfYear(formattedDate);
-        }
+        Date formattedDate = setToMidnight(stringToDate(date));
+        Date formattedEndDate = setToEndOfDay(stringToDate(date));
         Set <Istif> results = new HashSet<>();
-        results.addAll(istifRepository.findByCreatedAtBetween(startDate,endDate));
-        results.addAll(istifRepository.findByRelevantDateBetween(startDate,endDate));
+        results.addAll(istifRepository.findByCreatedAtBetween(formattedDate,formattedEndDate));
+        results.addAll(istifRepository.findByRelevantDateBetween(formattedDate,formattedEndDate));
+        return results.stream().toList();
+    }
+
+    public List<Istif> searchIstifsWithMultipleDate(String startDate,String endDate) throws ParseException {
+        Date startFormattedDate = stringToDate(startDate);
+        Date endFormattedDate = stringToDate(endDate);
+        Set <Istif> results = new HashSet<>();
+        results.addAll(istifRepository.findByCreatedAtBetween(startFormattedDate,endFormattedDate));
+        results.addAll(istifRepository.findByRelevantDateBetween(startFormattedDate,endFormattedDate));
         return results.stream().toList();
     }
 
@@ -171,13 +176,11 @@ public class IstifService {
 
     public Date stringToDate(String timeStamp) throws ParseException{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            return dateFormat.parse(timeStamp);
-        } catch (ParseException e) {
-            dateFormat = new SimpleDateFormat("yyyy-01-01");
-            String yearStamp = timeStamp.concat("-01-01");
-            return dateFormat.parse(yearStamp);
+        if(timeStamp.length() < 5){
+            timeStamp += "-01-01";
         }
+        return dateFormat.parse(timeStamp);
+
     }
 
     public Istif enterIstif(User foundUser, IstifEditRequest istifEditRequest) throws ParseException, IOException {
@@ -188,6 +191,7 @@ public class IstifService {
                 .text(imageService.parseAndSaveImages(istifEditRequest.getText()))
                 .user(foundUser)
                 .createdAt(new Date())
+                .relevantDate(istifEditRequest.getRelevantDate())
                 .likes(new HashSet<>())
                 .build();
     }
@@ -198,9 +202,11 @@ public class IstifService {
             Istif enteredIstif = enterIstif(user,request);
             enteredIstif.setId(istifId);
             enteredIstif.setLikes(istif.getLikes());
+            enteredIstif.setLabels(istif.getLabels());
             enteredIstif.setId(istif.getId());
             enteredIstif.setComments(istif.getComments());
             enteredIstif.setShareFlag(istif.getShareFlag());
+            enteredIstif.setRelevantDate(istif.getRelevantDate());
             return istifRepository.save(enteredIstif);
         }
         return null;
@@ -223,6 +229,9 @@ public class IstifService {
     }
 
     public String fetchTitle(String url) {
+        if(!url.contains("https://")){
+            url = "https://"+url;
+        }
         try {
             Document document = Jsoup.connect(url).get();
             return document.title();

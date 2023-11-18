@@ -69,13 +69,17 @@ public class IstifController {
     @GetMapping("/search")
     public ResponseEntity<?> searchStories(
             @RequestParam(required = false) String query,
-            @RequestParam(required = false) String date) throws ParseException {
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) throws ParseException {
         Set<Istif> istifSet = new HashSet<>();
         if(query != null){
             istifSet.addAll(istifService.searchIstifsWithQuery(query));
         }
-        if(date != null){
-            istifSet.addAll(istifService.searchIstifsWithDate(date));
+        if(startDate != null){
+            istifSet.addAll(istifService.searchIstifsWithDate(startDate));
+            if(endDate != null){
+                istifSet.addAll(istifService.searchIstifsWithMultipleDate(startDate,endDate));
+            }
         }
 
         if(istifSet.isEmpty()){

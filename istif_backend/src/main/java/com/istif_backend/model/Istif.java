@@ -23,9 +23,10 @@ public class Istif extends BaseEntity{
     @Lob
     private String text;
 
-    @NotBlank
+
     private String title;
 
+    @NotBlank
     private String titleLink;
 
     @ElementCollection
@@ -50,7 +51,7 @@ public class Istif extends BaseEntity{
 
     @Column(name = "relevant_date")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate relevantDate;
+    private Date relevantDate;
 
     private Integer shareFlag = -1;
 
