@@ -10,6 +10,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.regex.Matcher;
@@ -29,12 +34,34 @@ public class ImageService {
         while (matcher.find()) {
             String base64Data = matcher.group(1);
             byte[] imageBytes = Base64.getDecoder().decode(base64Data);
-            String imgurUrl = uploadImageToImgur(imageBytes, imgurClientId);
+            int targetFileSizeKB = 50;
+            byte[] resizedImageBytes = resizeImage(imageBytes, targetFileSizeKB);
+            String imgurUrl = uploadImageToImgur(resizedImageBytes, imgurClientId);
             matcher.appendReplacement(updatedText, imgurUrl);
         }
         matcher.appendTail(updatedText);
 
         return updatedText.toString();
+    }
+
+    private byte[] resizeImage(byte[] imageBytes, int targetFileSizeKB) throws IOException {
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+        BufferedImage bufferedImage = ImageIO.read(bis);
+
+        int originalSizeKB = imageBytes.length / 1024;
+        double scalingFactor = Math.sqrt((double) targetFileSizeKB / originalSizeKB);
+
+        int newWidth = (int) (bufferedImage.getWidth() * scalingFactor);
+        int newHeight = (int) (bufferedImage.getHeight() * scalingFactor);
+
+        Image scaledImage = bufferedImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        resizedImage.getGraphics().drawImage(scaledImage, 0, 0, null);
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, "jpg", bos);
+
+        return bos.toByteArray();
     }
 
     private String uploadImageToImgur(byte[] imageBytes, String imgurClientId) throws IOException {
