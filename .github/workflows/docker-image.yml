@@ -15,8 +15,8 @@ jobs:
 
     - name: Build and push Backend image
       env:
-        IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/istif
-        IMAGE_TAG: istif-backend-latest
+        IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/istif-backend
+        IMAGE_TAG: latest
       run: |
         docker build -t $IMAGE_NAME:$IMAGE_TAG ./istif_backend
         echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
@@ -24,8 +24,8 @@ jobs:
 
     - name: Build and push Frontend image
       env:
-        IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/istif
-        IMAGE_TAG: istif-frontend-latest
+        IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/istif-frontend
+        IMAGE_TAG: latest
       run: |
         docker build -t $IMAGE_NAME:$IMAGE_TAG ./istif_frontend
         echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
