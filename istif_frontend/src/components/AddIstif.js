@@ -64,8 +64,10 @@ const AddIstifForm = () => {
           withCredentials: true,
         }
       );
+      const newIstifId = response.data.id;
       console.log(response);
-      Navigate("/istif/my-istifs");
+      console.log(`New Istif ID: ${newIstifId}`);
+      Navigate(`/istif/${newIstifId}`);
     } catch (error) {
       console.log(error);
     }
