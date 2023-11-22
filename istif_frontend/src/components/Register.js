@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./css/Register.css";
+import { useNavigate } from "react-router-dom";
 
 const RegisterComponent = () => {
   const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ const RegisterComponent = () => {
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const Navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

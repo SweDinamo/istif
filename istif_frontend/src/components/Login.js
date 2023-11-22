@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./css/Login.css";
+import { useNavigate } from "react-router-dom";
 
 function LoginComponent() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const Navigate = useNavigate();
 
   const handleLogin = (event) => {
     event.preventDefault();

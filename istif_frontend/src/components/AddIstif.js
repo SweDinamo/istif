@@ -5,6 +5,7 @@ import "react-quill/dist/quill.snow.css";
 import "quill-emoji/dist/quill-emoji.css";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns"; // Import the date-fns format function
+import {useNavigate} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/AddIstif.css";
 
@@ -14,6 +15,7 @@ const AddIstifForm = () => {
   const [text, setText] = useState("");
   const [relevantDate, setRelevantDate] = useState(null);
   const [shareFlag, setShareFlag] = useState(0); // 0 for private, 1 for public
+  const Navigate = useNavigate();
 
   const handleEditorChange = (value) => {
     setText(value);
