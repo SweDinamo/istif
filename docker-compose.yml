@@ -4,7 +4,7 @@ services:
     build:
       context: ./istif_backend
     container_name: istif-backend
-    image: hdenizdogan/istif:istif-backend-latest
+    image: hdenizdogan/istif-backend:latest
     ports:
       - "8080:8080"
     env_file:
@@ -19,7 +19,7 @@ services:
     build:
       context: ./istif_frontend
     container_name: istif-frontend
-    image: hdenizdogan/istif:istif-frontend-latest
+    image: hdenizdogan/istif-frontend:latest
     ports:
       - "3000:3000"
     env_file:
