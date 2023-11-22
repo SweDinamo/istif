@@ -13,21 +13,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Docker Compose
-      run: docker-compose --version
-
     - name: Build and push Backend image
       env:
         IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/istif-backend
       run: |
-        docker-compose -f docker-compose.yml build backend
+        docker build -t $IMAGE_NAME:latest ./istif_backend
         echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-        docker-compose -f docker-compose.yml push backend
+        docker push $IMAGE_NAME:latest
 
     - name: Build and push Frontend image
       env:
         IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/istif-frontend
       run: |
-        docker-compose -f docker-compose.yml build frontend
+        docker build -t $IMAGE_NAME:latest ./istif_frontend
         echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-        docker-compose -f docker-compose.yml push frontend
+        docker push $IMAGE_NAME:latest
