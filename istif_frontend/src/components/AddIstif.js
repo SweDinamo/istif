@@ -63,7 +63,7 @@ const AddIstifForm = () => {
         }
       );
       console.log(response);
-      window.location.href = `${process.env.REACT_APP_FRONTEND_URL}/user/my-profile`;
+      Navigate("/istif/my-istifs");
     } catch (error) {
       console.log(error);
     }

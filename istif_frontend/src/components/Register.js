@@ -30,7 +30,7 @@ const RegisterComponent = () => {
       );
       console.log(response.data);
       alert("Registered successfully!");
-      window.location.href = `${process.env.REACT_APP_FRONTEND_URL}/login`;
+      Navigate("/login");
     } catch (error) {
       console.error(error);
       alert("Error occurred during registration!");

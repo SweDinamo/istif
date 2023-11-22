@@ -19,7 +19,7 @@ function LoginComponent() {
       .then((response) => {
         const cookieValue = response.headers["bearer"];
         localStorage.setItem("authToken", cookieValue);
-        window.location.href = `${process.env.REACT_APP_FRONTEND_URL}/istif/all-istifs`;
+        Navigate("/istif/all-istifs");
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
