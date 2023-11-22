@@ -15,7 +15,7 @@ jobs:
 
     - name: Set up Docker Compose
       run: docker-compose --version
-      working-directory: path/to/your/docker-compose/directory
+      working-directory: .
 
     - name: Log in to Docker Hub
       env:
