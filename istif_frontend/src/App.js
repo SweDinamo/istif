@@ -46,6 +46,10 @@ function App() {
       });
   };
 
+  const handleLogin = () => {
+    setLoggedIn(true);
+  };
+
   return (
     <Router>
       <nav className="nav">
@@ -106,7 +110,7 @@ function App() {
           }
         />
         <Route path="/user/my-profile" element={<User />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/istif/add-istif" element={<AddIstifForm />} />
         <Route path="/istif/my-istifs" element={<MyIstifs />} />
