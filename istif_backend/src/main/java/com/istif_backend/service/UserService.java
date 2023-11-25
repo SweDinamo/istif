@@ -127,7 +127,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUserPhoto(User foundUser, byte[] uploadedPhoto) {
+    public User updateUserPhoto(User foundUser, String uploadedPhoto) {
         foundUser.setProfilePhoto(uploadedPhoto);
         return userRepository.save(foundUser);
     }

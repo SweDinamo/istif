@@ -97,10 +97,10 @@ public class UserController {
             return ResponseEntity.badRequest().body("Please select a file to upload!");
         }
         try {
-            String uploadedPhoto = imageService.parseAndSaveImages(Arrays.toString(file.getBytes()));
             byte[] parsedPhoto = file.getBytes();
+            String convertedPhoto = imageService.parseAndSaveImages(parsedPhoto);
             User foundUser = userService.validateTokenizedUser(request);
-            return ResponseEntity.ok(userService.updateUserPhoto(foundUser,parsedPhoto));
+            return ResponseEntity.ok(userService.updateUserPhoto(foundUser,convertedPhoto));
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

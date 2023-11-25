@@ -25,6 +25,8 @@ public class ImageService {
     @Value("${IMGUR_CLIENT_ID}")
     String imgurClientId;
 
+    int targetFileSizeKB = 50;
+
     public String parseAndSaveImages(String textWithBase64) throws IOException {
         String regex = "data:image/[^;]*;base64,([^\\\"]+)";
         Pattern pattern = Pattern.compile(regex);
@@ -34,7 +36,6 @@ public class ImageService {
         while (matcher.find()) {
             String base64Data = matcher.group(1);
             byte[] imageBytes = Base64.getDecoder().decode(base64Data);
-            int targetFileSizeKB = 50;
             byte[] resizedImageBytes = resizeImage(imageBytes, targetFileSizeKB);
             String imgurUrl = uploadImageToImgur(resizedImageBytes, imgurClientId);
             matcher.appendReplacement(updatedText, imgurUrl);
@@ -42,6 +43,11 @@ public class ImageService {
         matcher.appendTail(updatedText);
 
         return updatedText.toString();
+    }
+
+    public String parseAndSaveImages(byte[] base64Data) throws IOException {
+        byte[] resizedImage = resizeImage(base64Data, targetFileSizeKB);
+        return uploadImageToImgur(resizedImage,imgurClientId);
     }
 
     private byte[] resizeImage(byte[] imageBytes, int targetFileSizeKB) throws IOException {

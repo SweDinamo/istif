@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-
 import { useParams } from "react-router-dom";
 import "./css/Profile.css";
 
@@ -10,16 +9,15 @@ function Profile() {
   const [error, setError] = useState("");
   const [isFollowing, setIsFollowing] = useState();
   const [followButtonName, setFollowButtonName] = useState();
+  const photoPreview = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  
 
   useEffect(() => {
     axios
-      .get(
-        `${process.env.REACT_APP_BACKEND_URL}/api/user/profile`,
-        {
-          withCredentials: true,
-        }
-      )
+      .get(`${process.env.REACT_APP_BACKEND_URL}/api/user/profile`, {
+        withCredentials: true,
+      })
       .then((response) => {
         const loggedInUser = response.data;
         if (loggedInUser.following && loggedInUser.following.includes(id)) {
@@ -91,11 +89,15 @@ function Profile() {
           <label htmlFor="photo" className="profile-photo-label">
             Photo:
           </label>
-          <img
-            className="profile-photo"
-            src={`data:image/jpeg;base64,${user.profilePhoto}`}
-            alt={user.username}
-          />
+          <p>
+            {
+              <img
+                className="profile-photo"
+                src={`${user.profilePhoto}` || photoPreview}
+                alt={user.username}
+              />
+            }
+          </p>
         </div>
         <h1 className="profile-username">Username: {user.username}</h1>
         <p className="profile-biography">Biography: {user.biography}</p>

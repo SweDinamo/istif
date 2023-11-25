@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./css/User.css";
 
 function UserComponent({ userId }) {
@@ -10,6 +11,7 @@ function UserComponent({ userId }) {
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
   );
   const [biography, setBiography] = useState("");
+  const Navigate = useNavigate();
 
   useEffect(() => {
     const cookieValue = document.cookie.replace(
@@ -49,7 +51,7 @@ function UserComponent({ userId }) {
       )
       .then((response) => {
         setUser({ ...user, biography: response.data.biography });
-        setBiography("");
+        setBiography(response.data.biography);
       })
       .catch((error) => console.log(error));
   };
@@ -75,6 +77,7 @@ function UserComponent({ userId }) {
         setUser({ ...user, profilePhoto: response.data.photo });
         setPhotoFile(user.profilePhoto);
         setPhotoPreview(user.profilePhoto);
+        Navigate("/user/my-profile");
       })
       .catch((error) => console.log(error));
   };
@@ -93,11 +96,13 @@ function UserComponent({ userId }) {
       <p>Biography: {user.biography}</p>
       <div>
         <label htmlFor="photo">Photo:</label>
-        <img
-          className="user-photo"
-          src={photoPreview || `data:image/jpeg;base64,${user.profilePhoto}`}
-          alt={user.username}
-        />
+        <p>
+          {<img className="user-photo" 
+          src={`${user.profilePhoto}` || photoPreview}
+          alt={photoPreview}/>
+          }
+        </p>
+
         <form onSubmit={handleSubmit}>
           <input type="file" name="photo" onChange={handleFileChange} />
           <button type="submit">Save Photo</button>
