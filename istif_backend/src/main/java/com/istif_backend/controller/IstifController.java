@@ -20,7 +20,6 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/istif")
-@CrossOrigin
 public class IstifController {
 
     @Autowired

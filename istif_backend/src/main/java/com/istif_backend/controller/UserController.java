@@ -22,7 +22,6 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin    
 public class UserController {
 
     @Autowired
