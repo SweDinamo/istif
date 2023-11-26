@@ -39,7 +39,7 @@ function FollowedUserIstifs() {
         <div key={istif.id} className="istif">
           <h2 className="istif-title">
             <b>Title: </b>
-            <a href={"/istif/" + istif.id}>{istif.titleLink}</a>
+            <a href={"/istif/" + istif.id}>{istif.title}</a>
           </h2>
           <p className="istif-title">
             <b>Text:</b> {parse(istif.text)}
