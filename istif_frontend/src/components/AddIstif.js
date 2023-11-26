@@ -13,12 +13,16 @@ const AddIstifForm = () => {
   const [titleLink, setTitleLink] = useState("");
   const [labels, setLabels] = useState("");
   const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
   const [relevantDate, setRelevantDate] = useState(null);
   const [shareFlag, setShareFlag] = useState(0); // 0 for private, 1 for public
   const Navigate = useNavigate();
 
   const handleEditorChange = (value) => {
     setText(value);
+  };
+  const handleTitleChange = (value) => {
+    setTitle(value);
   };
 
    const handleTitleLinkChange = (value) => {
@@ -50,6 +54,7 @@ const AddIstifForm = () => {
 
     const istif = {
       titleLink,
+      title,
       labels: labels.split(","),
       text,
       relevantDate: formattedRelevantDate,
@@ -103,7 +108,16 @@ const AddIstifForm = () => {
   return (
     <form className="add-istif-form" onSubmit={handleSubmit}>
       <label className="add-istif-label">
-        Link:
+        <b>Title:</b>
+        <input
+          type="text"
+          className="add-istif-input"
+          value={title}
+          onChange={(e) => handleTitleChange(e.target.value)}
+        />
+      </label>
+      <label className="add-istif-label">
+        <b>Link:</b>
         <input
           type="text"
           className="add-istif-input"
