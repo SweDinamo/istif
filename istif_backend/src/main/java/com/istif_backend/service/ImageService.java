@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -45,9 +46,9 @@ public class ImageService {
         return updatedText.toString();
     }
 
-    public String parseAndSaveImages(byte[] base64Data) throws IOException {
-        byte[] resizedImage = resizeImage(base64Data, targetFileSizeKB);
-        return uploadImageToImgur(resizedImage,imgurClientId);
+    public String parseAndSaveImages(MultipartFile file) throws IOException {
+        byte[] uploadedPhotoBytes = file.getBytes();
+        return uploadImageToImgur(uploadedPhotoBytes,imgurClientId);
     }
 
     private byte[] resizeImage(byte[] imageBytes, int targetFileSizeKB) throws IOException {

@@ -9,8 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -21,6 +23,9 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ImageService imageService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -127,7 +132,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUserPhoto(User foundUser, String uploadedPhoto) {
+    public User updateUserPhoto(User foundUser, MultipartFile uploadedFile) throws IOException {
+        String uploadedPhoto = imageService.parseAndSaveImages(uploadedFile);
         foundUser.setProfilePhoto(uploadedPhoto);
         return userRepository.save(foundUser);
     }
