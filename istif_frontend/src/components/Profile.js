@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import photoPreview from "../profile_pic.png";
 import "./css/Profile.css";
 
 function Profile() {
@@ -9,7 +10,6 @@ function Profile() {
   const [error, setError] = useState("");
   const [isFollowing, setIsFollowing] = useState();
   const [followButtonName, setFollowButtonName] = useState();
-  const photoPreview = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   
 

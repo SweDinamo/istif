@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import blankPhotoPreview from "../profile_pic.png";
 import "./css/User.css";
 
 function UserComponent({ userId }) {
@@ -8,7 +9,7 @@ function UserComponent({ userId }) {
   const [error, setError] = useState("");
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(
-    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+    blankPhotoPreview
   );
   const [biography, setBiography] = useState("");
   const Navigate = useNavigate();
