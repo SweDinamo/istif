@@ -9,7 +9,7 @@ function Profile() {
   const [error, setError] = useState("");
   const [isFollowing, setIsFollowing] = useState();
   const [followButtonName, setFollowButtonName] = useState();
-  const photoPreview = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  const photoPreview = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   
 
@@ -93,7 +93,7 @@ function Profile() {
             {
               <img
                 className="profile-photo"
-                src={`${user.profilePhoto}` || photoPreview}
+                src={user.profilePhoto || photoPreview}
                 alt={user.username}
               />
             }

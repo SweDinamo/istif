@@ -97,9 +97,12 @@ function UserComponent({ userId }) {
       <div>
         <label htmlFor="photo">Photo:</label>
         <p>
-          {<img className="user-photo" 
-          src={`${user.profilePhoto}` || photoPreview}
-          alt={photoPreview}/>
+          {
+            <img
+              className="user-photo"
+              src={user.profilePhoto || photoPreview}
+              alt={photoPreview}
+            />
           }
         </p>
 
