@@ -12,8 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedOrigins("*","http://frontend:3000","http://frontend","http://localhost:3000","http://localhost")
+                .allowedOriginPatterns("*","http://frontend:3000","http://frontend","http://localhost:3000","http://localhost")
                 .allowedMethods("*")
                 .allowCredentials(true)
                 .exposedHeaders("Set-Cookie")

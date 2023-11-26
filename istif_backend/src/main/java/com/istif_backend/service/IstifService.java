@@ -38,7 +38,7 @@ public class IstifService {
 
     public Istif createIstif(User foundUser, IstifCreateRequest istifCreateRequest) throws ParseException, IOException {
         Istif createdIstif = Istif.builder()
-                .title(fetchTitle(istifCreateRequest.getTitleLink()))
+                .title(istifCreateRequest.getTitle())
                 .titleLink(istifCreateRequest.getTitleLink())
                 .labels(istifCreateRequest.getLabels())
                 .text(imageService.parseAndSaveImages(istifCreateRequest.getText()))
@@ -48,6 +48,15 @@ public class IstifService {
                 .relevantDate(istifCreateRequest.getRelevantDate())
                 .likes(new HashSet<>())
                 .build();
+        if(createdIstif.getTitle() == null || (createdIstif.getTitle().isEmpty() || createdIstif.getTitle().isBlank())){
+            String title = fetchTitle(istifCreateRequest.getTitleLink());
+            if(!title.isEmpty()){
+                createdIstif.setTitle(title);
+            }
+            else{
+                createdIstif.setTitle(createdIstif.getTitleLink());
+            }
+        }
         return istifRepository.save(createdIstif);
 
     }
