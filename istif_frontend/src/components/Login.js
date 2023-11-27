@@ -21,7 +21,7 @@ function LoginComponent({ onLogin }) {
       .then((response) => {
         const cookieValue = response.headers["bearer"];
         localStorage.setItem("authToken", cookieValue);
-        onLogin(); // Call the onLogin prop to update the login status
+        onLogin();
         navigate("/istif/all-istifs");
       })
       .catch((error) => {

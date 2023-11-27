@@ -78,7 +78,6 @@ function UserComponent({ userId }) {
         setUser({ ...user, profilePhoto: response.data.photo });
         setPhotoFile(user.profilePhoto);
         setPhotoPreview(user.profilePhoto);
-        Navigate("/user/my-profile");
       })
       .catch((error) => console.log(error));
   };
@@ -106,7 +105,6 @@ function UserComponent({ userId }) {
             />
           }
         </p>
-
         <form onSubmit={handleSubmit}>
           <input type="file" name="photo" onChange={handleFileChange} />
           <button type="submit">Save Photo</button>
