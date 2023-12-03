@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import blankPhotoPreview from "../profile_pic.png";
 import "./css/User.css";
 
@@ -12,7 +11,6 @@ function UserComponent({ userId }) {
     blankPhotoPreview
   );
   const [biography, setBiography] = useState("");
-  const Navigate = useNavigate();
 
   useEffect(() => {
     const cookieValue = document.cookie.replace(
