@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
-import IstifImage from "./istiffinal_1.jpg";
+import IstifImage from "./istiffinal_1.gif";
 import IstifLogo from "./istif_logo.png";
 import User from "./components/User";
 import Profile from "./components/Profile";
