@@ -102,10 +102,10 @@ function App() {
           element={
             <div className="istif-container">
               <img src={IstifImage} alt="Istif" className="istif-image" />
-              <h1>
-                Welcome to Istif, your stack application that people can keep
-                and share their personal preference of content!
-              </h1>
+              <h2>
+                Welcome to Istif, your stack application that you can keep
+                and share their personal preference of content to everyone!
+              </h2>
             </div>
           }
         />
