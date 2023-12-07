@@ -46,11 +46,11 @@ public class Istif extends BaseEntity{
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Istanbul")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "Europe/Istanbul")
     private Date createdAt;
 
     @Column(name = "relevant_date")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "Europe/Istanbul")
     private Date relevantDate;
 
     private Integer shareFlag = -1;
