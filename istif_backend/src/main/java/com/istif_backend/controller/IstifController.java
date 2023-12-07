@@ -32,10 +32,9 @@ public class IstifController {
         return ResponseEntity.ok(istifService.findAllByOrderByIdDesc());
     }
 
-    //MOCK UNTIL ACTIVITY FEED LOGIC IS ESTABLISHED
-    @GetMapping("/feed")
+    @GetMapping("/recommended")
     public ResponseEntity<?> findFeedStories(HttpServletRequest request){
-        return ResponseEntity.ok(istifService.findAllByOrderByIdDesc());
+        return ResponseEntity.ok(istifService.findRecommendedStories());
     }
 
     @PostMapping("/add")

@@ -44,7 +44,6 @@ public class IstifService {
                 .text(imageService.parseAndSaveImages(istifCreateRequest.getText()))
                 .user(foundUser)
                 .shareFlag(istifCreateRequest.getShareFlag())
-                .createdAt(new Date())
                 .relevantDate(istifCreateRequest.getRelevantDate())
                 .likes(new HashSet<>())
                 .build();
@@ -244,5 +243,18 @@ public class IstifService {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public List<Istif> findRecentStories() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        Date date = calendar.getTime();
+        return istifRepository.findByCreatedAtAfterOrderByIdDesc(date);
+    }
+
+    public List<Istif> findRecommendedStories(){
+        List<Istif> recentIstifList = findRecentStories();
+        recentIstifList.sort(Comparator.comparingInt(Istif::getLikesSize).reversed());
+        return recentIstifList;
     }
 }

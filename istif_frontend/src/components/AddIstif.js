@@ -4,8 +4,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "quill-emoji/dist/quill-emoji.css";
 import DatePicker from "react-datepicker";
-import { format } from "date-fns"; // Import the date-fns format function
-import {useNavigate} from "react-router-dom";
+import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/AddIstif.css";
 
@@ -15,41 +15,47 @@ const AddIstifForm = () => {
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   const [relevantDate, setRelevantDate] = useState(null);
+  const [dateFormat, setDateFormat] = useState("dd/MM/yyyy"); // Added state for date format
   const [shareFlag, setShareFlag] = useState(0); // 0 for private, 1 for public
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleEditorChange = (value) => {
     setText(value);
   };
+
   const handleTitleChange = (value) => {
     setTitle(value);
   };
 
-   const handleTitleLinkChange = (value) => {
-     if (
-       value &&
-       !value.startsWith("http://") &&
-       !value.startsWith("https://")
-     ) {
-       value = "https://" + value;
-     }
+  const handleTitleLinkChange = (value) => {
+    if (
+      value &&
+      !value.startsWith("http://") &&
+      !value.startsWith("https://")
+    ) {
+      value = "https://" + value;
+    }
 
-     if (value && !value.includes("www.")) {
-       value = value.replace("https://", "https://www.");
-     }
+    if (value && !value.includes("www.")) {
+      value = value.replace("https://", "https://www.");
+    }
 
-     setTitleLink(value);
-   };
+    setTitleLink(value);
+  };
 
   const handleToggleChange = () => {
-    setShareFlag((prevFlag) => (prevFlag === 0 ? 1 : 0)); // Toggle between 0 and 1
+    setShareFlag((prevFlag) => (prevFlag === 0 ? 1 : 0));
+  };
+
+  const handleRelevantDateChange = (date) => {
+    setRelevantDate(date);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const formattedRelevantDate = relevantDate
-      ? format(relevantDate, "yyyy-MM-dd")
+      ? format(relevantDate, dateFormat.replace(/d/g, "d").replace(/y/g, "y"))
       : null;
 
     const istif = {
@@ -72,7 +78,7 @@ const AddIstifForm = () => {
       const newIstifId = response.data.id;
       console.log(response);
       console.log(`New Istif ID: ${newIstifId}`);
-      Navigate(`/istif/${newIstifId}`);
+      navigate(`/istif/${newIstifId}`);
     } catch (error) {
       console.log(error);
     }
@@ -100,10 +106,6 @@ const AddIstifForm = () => {
     "link",
     "image",
   ];
-
-  const handleRelevantDateChange = (date) => {
-    setRelevantDate(date);
-  };
 
   return (
     <form className="add-istif-form" onSubmit={handleSubmit}>
@@ -154,12 +156,26 @@ const AddIstifForm = () => {
         <DatePicker
           selected={relevantDate}
           onChange={handleRelevantDateChange}
-          dateFormat="dd/MM/yyyy"
+          dateFormat={dateFormat}
           className="add-istif-datepicker"
+          showMonthYearPicker={dateFormat === "MM/yyyy"}
+          showYearPicker={dateFormat === "yyyy"}
+          showFullMonthYearPicker={dateFormat === "MM/yyyy"}
         />
       </label>
       <br />
-      <br />
+      <label className="add-istif-label">
+        Date Format:
+        <select
+          value={dateFormat}
+          onChange={(e) => setDateFormat(e.target.value)}
+          className="add-istif-select"
+        >
+          <option value="dd/MM/yyyy">dd/MM/yyyy</option>
+          <option value="MM/yyyy">MM/yyyy</option>
+          <option value="yyyy">yyyy</option>
+        </select>
+      </label>
       <br />
       <div className="slider-container">
         <label className={`switch ${shareFlag === 1 ? "public" : "private"}`}>

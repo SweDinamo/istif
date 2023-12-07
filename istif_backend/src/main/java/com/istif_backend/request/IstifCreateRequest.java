@@ -14,8 +14,7 @@ public class IstifCreateRequest {
     private String titleLink;
     private String title;
     private ArrayList<String> labels = new ArrayList<>();
-
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date relevantDate;
-
     private Integer shareFlag;
 }

@@ -5,19 +5,6 @@ import { useParams } from "react-router-dom";
 import "react-quill/dist/quill.snow.css";
 import "./css/AllIstifs.css";
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  const hours = date.getHours();
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-
-  const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
-
-  return formattedDate;
-}
-
 function IstifDetails() {
   const { id } = useParams();
   const [istif, setIstif] = useState(null);
@@ -128,7 +115,7 @@ function IstifDetails() {
       <a href={"/user/" + istif.user.id}>{istif.user.username}</a>
       <p>
         <b>Published at: </b>
-        {formatDate(istif.createdAt)}
+        {istif.createdAt}
       </p>
       <p>
         <b>Relevant Date: </b>

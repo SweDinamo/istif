@@ -1,12 +1,12 @@
 package com.istif_backend.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -45,14 +45,18 @@ public class Istif extends BaseEntity{
     private Set<Long> likes = new HashSet<>();
 
     @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "Europe/Istanbul")
-    private Date createdAt;
+    private Date createdAt  = new Date();
 
     @Column(name = "relevant_date")
-    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "Europe/Istanbul")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date relevantDate;
 
     private Integer shareFlag = -1;
+
+    @JsonIgnore
+    public int getLikesSize(){
+        return likes.size();
+    }
 
 }

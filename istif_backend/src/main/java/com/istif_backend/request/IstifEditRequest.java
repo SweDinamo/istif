@@ -21,7 +21,6 @@ public class IstifEditRequest {
     private String header;
 
     private ArrayList<String> labels = new ArrayList<>();
-
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date relevantDate;
 
