@@ -2,9 +2,8 @@ package com.istif_backend.repository;
 
 import com.istif_backend.model.Istif;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 
-import java.util.Collection;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -24,11 +23,11 @@ public interface IstifRepository extends JpaRepository<Istif,Long> {
 
     List<Istif> findByCreatedAtBetween(Date startDate, Date endDate);
 
-    List<Istif> findByRelevantDateBetween(Date formattedStartDate, Date formattedEndDate);
+    List<Istif> findByRelevantDateBetween(LocalDate formattedStartDate, LocalDate formattedEndDate);
 
-    List<Istif> findByCreatedAt(Date formattedDate);
-
-    List<Istif> findByRelevantDate(Date formattedDate);
+    List<Istif> findByRelevantDate(LocalDate formattedDate);
 
     List<Istif> findByCreatedAtAfterOrderByIdDesc(Date date);
+
+    List<Istif> findAllByShareFlagOrderByIdDesc(Integer shareFlag);
 }

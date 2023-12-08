@@ -105,7 +105,7 @@ function IstifDetails() {
         {parse(istif.text)}
       </p>
       <p>
-        <b>Likes:</b> {istif.likes ? istif.likes.length : 0}
+        <b>Likes:</b> {istif.likeSize}
       </p>
       <button onClick={handleLikeIstif}>Like!</button>
       <p>
@@ -119,7 +119,7 @@ function IstifDetails() {
       </p>
       <p>
         <b>Relevant Date: </b>
-        {istif.relevantDate}
+        {istif.istifDate}
       </p>
       <p>
         <b>Comments:</b>

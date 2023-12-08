@@ -1,11 +1,14 @@
 package com.istif_backend.service;
 
+import com.istif_backend.configuration.LocalDateParser;
 import com.istif_backend.model.Comment;
 import com.istif_backend.model.Istif;
 import com.istif_backend.model.User;
 import com.istif_backend.repository.IstifRepository;
 import com.istif_backend.request.IstifCreateRequest;
 import com.istif_backend.request.IstifEditRequest;
+import com.istif_backend.response.IstifListResponse;
+import com.istif_backend.response.SingleIstifResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +34,13 @@ public class IstifService {
     ImageService imageService;
 
 
-    public List<Istif> findAllByOrderByIdDesc(){
+    public List<IstifListResponse> findAllByOrderByIdDesc(){
         List<Istif> istifList = istifRepository.findByShareFlagOrderByCreatedAtDesc(1);
-        return istifList;
+        List<IstifListResponse> istifResponseList = new ArrayList<>();
+        for(Istif istif: istifList){
+            istifResponseList.add(new IstifListResponse(istif));
+        }
+        return istifResponseList;
     }
 
     public Istif createIstif(User foundUser, IstifCreateRequest istifCreateRequest) throws ParseException, IOException {
@@ -44,24 +51,30 @@ public class IstifService {
                 .text(imageService.parseAndSaveImages(istifCreateRequest.getText()))
                 .user(foundUser)
                 .shareFlag(istifCreateRequest.getShareFlag())
-                .relevantDate(istifCreateRequest.getRelevantDate())
+                .createdAt(new Date())
                 .likes(new HashSet<>())
                 .build();
-        if(createdIstif.getTitle() == null || (createdIstif.getTitle().isEmpty() || createdIstif.getTitle().isBlank())){
+        Istif modifiedIstif = LocalDateParser.parseDate(istifCreateRequest.getRelevantDate(),createdIstif);
+        if(modifiedIstif.getTitle() == null || (modifiedIstif.getTitle().isEmpty() || modifiedIstif.getTitle().isBlank())){
             String title = fetchTitle(istifCreateRequest.getTitleLink());
             if(!title.isEmpty()){
-                createdIstif.setTitle(title);
+                modifiedIstif.setTitle(title);
             }
             else{
-                createdIstif.setTitle(createdIstif.getTitleLink());
+                modifiedIstif.setTitle(modifiedIstif.getTitleLink());
             }
         }
-        return istifRepository.save(createdIstif);
+        return istifRepository.save(modifiedIstif);
 
     }
 
-    public List<Istif> findByUserIdOrderByIdDesc(Long userId){
-        return istifRepository.findByUserIdOrderByIdDesc(userId);
+    public List<IstifListResponse> findByUserIdOrderByIdDesc(Long userId){
+        List<Istif> istifList = istifRepository.findByUserIdOrderByIdDesc(userId);
+        List<IstifListResponse> istifResponseList = new ArrayList<>();
+        for(Istif istif: istifList){
+            istifResponseList.add(new IstifListResponse(istif));
+        }
+        return istifResponseList;
     }
 
 
@@ -73,7 +86,12 @@ public class IstifService {
         return optionalIstif.get();
     }
 
-    public List<Istif> findFollowingStories(User foundUser) {
+    public SingleIstifResponse retrieveIstif(Long id){
+        Istif istif = getIstifByIstifId(id);
+        return new SingleIstifResponse(istif);
+    }
+
+    public List<IstifListResponse> findFollowingStories(User foundUser) {
         Set<User> followingList = foundUser.getFollowing();
         List<Long> idList = new ArrayList<>();
         List<Istif> istifList = new ArrayList<>();
@@ -81,11 +99,14 @@ public class IstifService {
             idList.add(user.getId());
         }
         for(Long id : idList){
-            List<Istif> userIstifList = findByUserIdAndShareFlagOrderByIdDesc(id,1);
+            List<Istif> userIstifList = istifRepository.findByUserIdAndShareFlagOrderByIdDesc(id,1);
             istifList.addAll(userIstifList);
         }
-
-        return istifList;
+        List<IstifListResponse> istifResponseList = new ArrayList<>();
+        for(Istif istif: istifList){
+            istifResponseList.add(new IstifListResponse(istif));
+        }
+        return istifResponseList;
 
     }
 
@@ -117,20 +138,24 @@ public class IstifService {
     }
 
     public List<Istif> searchIstifsWithDate(String date) throws ParseException {
-        Date formattedDate = setToMidnight(stringToDate(date));
-        Date formattedEndDate = setToEndOfDay(stringToDate(date));
+        Date formattedDate = setToMidnight(stringToStartDate(date));
+        Date formattedEndDate = setToEndOfDay(stringToEndDate(date));
         Set <Istif> results = new HashSet<>();
         results.addAll(istifRepository.findByCreatedAtBetween(formattedDate,formattedEndDate));
-        results.addAll(istifRepository.findByRelevantDateBetween(formattedDate,formattedEndDate));
+        results.addAll(istifRepository.findByRelevantDateBetween(
+                LocalDateParser.convertDateToLocalDate(stringToStartDate(date)),
+                LocalDateParser.convertDateToLocalDate(stringToEndDate(date))));
         return results.stream().toList();
     }
 
     public List<Istif> searchIstifsWithMultipleDate(String startDate,String endDate) throws ParseException {
-        Date startFormattedDate = stringToDate(startDate);
-        Date endFormattedDate = stringToDate(endDate);
+        Date startFormattedDate = stringToStartDate(startDate);
+        Date endFormattedDate = stringToEndDate(endDate);
         Set <Istif> results = new HashSet<>();
         results.addAll(istifRepository.findByCreatedAtBetween(startFormattedDate,endFormattedDate));
-        results.addAll(istifRepository.findByRelevantDateBetween(startFormattedDate,endFormattedDate));
+        results.addAll(istifRepository.findByRelevantDateBetween(
+                LocalDateParser.convertDateToLocalDate(startFormattedDate),
+                LocalDateParser.convertDateToLocalDate(endFormattedDate)));
         return results.stream().toList();
     }
 
@@ -182,10 +207,19 @@ public class IstifService {
         return "deleted";
     }
 
-    public Date stringToDate(String timeStamp) throws ParseException{
+    public Date stringToStartDate(String timeStamp) throws ParseException{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(timeStamp.length() < 5){
             timeStamp += "-01-01";
+        }
+        return dateFormat.parse(timeStamp);
+
+    }
+
+    public Date stringToEndDate(String timeStamp) throws ParseException{
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(timeStamp.length() < 5){
+            timeStamp += "-12-31";
         }
         return dateFormat.parse(timeStamp);
 
@@ -198,8 +232,6 @@ public class IstifService {
                 .labels(istifEditRequest.getLabels())
                 .text(imageService.parseAndSaveImages(istifEditRequest.getText()))
                 .user(foundUser)
-                .createdAt(new Date())
-                .relevantDate(istifEditRequest.getRelevantDate())
                 .likes(new HashSet<>())
                 .build();
     }
@@ -232,8 +264,13 @@ public class IstifService {
         return istifList;
     }
 
-    public List<Istif> findByUserIdAndShareFlagOrderByIdDesc(Long userId, int shareFlag){
-        return istifRepository.findByUserIdAndShareFlagOrderByIdDesc(userId,shareFlag);
+    public List<IstifListResponse> findByUserIdAndShareFlagOrderByIdDesc(Long userId, int shareFlag){
+        List<Istif> istifList = istifRepository.findByUserIdAndShareFlagOrderByIdDesc(userId,shareFlag);
+        List<IstifListResponse> istifResponseList = new ArrayList<>();
+        for(Istif istif: istifList){
+            istifResponseList.add(new IstifListResponse(istif));
+        }
+        return istifResponseList;
     }
 
     public String fetchTitle(String url) {
@@ -252,9 +289,22 @@ public class IstifService {
         return istifRepository.findByCreatedAtAfterOrderByIdDesc(date);
     }
 
-    public List<Istif> findRecommendedStories(){
-        List<Istif> recentIstifList = findRecentStories();
-        recentIstifList.sort(Comparator.comparingInt(Istif::getLikesSize).reversed());
-        return recentIstifList;
+    public List<IstifListResponse> findRecommendedStories(){
+        List<Istif> istifList = findRecentStories();
+        istifList.sort(Comparator.comparingInt(Istif::getLikesSize).reversed());
+        List<IstifListResponse> istifResponseList = new ArrayList<>();
+        for(Istif istif: istifList){
+            istifResponseList.add(new IstifListResponse(istif));
+        }
+        return istifResponseList;
+    }
+
+    public List<IstifListResponse> findAllByShareFlagOrderByIdDesc(Integer shareFlag) {
+        List<Istif> istifList = istifRepository.findAllByShareFlagOrderByIdDesc(shareFlag);
+        List<IstifListResponse> istifResponseList = new ArrayList<>();
+        for(Istif istif: istifList){
+            istifResponseList.add(new IstifListResponse(istif));
+        }
+        return istifResponseList;
     }
 }

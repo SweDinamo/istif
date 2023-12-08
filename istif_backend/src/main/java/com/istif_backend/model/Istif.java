@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -49,10 +50,11 @@ public class Istif extends BaseEntity{
     private Date createdAt  = new Date();
 
     @Column(name = "relevant_date")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date relevantDate;
+    private LocalDate relevantDate;
 
-    private Integer shareFlag = -1;
+    private Integer DateFlag = -1; // 3 for dd/mm/yyyy, 2 for mm/yyyy, 1 for yyyy, -1 for default
+
+    private Integer shareFlag = -1; // 0 if private, 1 if public
 
     @JsonIgnore
     public int getLikesSize(){

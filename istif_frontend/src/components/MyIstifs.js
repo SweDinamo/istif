@@ -7,19 +7,6 @@ function MyIstifs() {
   const [myIstifs, setMyIstifs] = useState([]);
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-
-    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
-
-    return formattedDate;
-  }
-
   useEffect(() => {
     axios
       .get(
@@ -63,11 +50,11 @@ function MyIstifs() {
             <b>Title: </b>
             <a href={"/istif/" + istif.id}>{istif.title}</a>
           </h2>
-          <p className="istif-title">
+          <p className="istif-details">
             <b>Text:</b> {parse(istif.text)}
           </p>
           <p className="istif-details">
-            <b>Likes:</b> {istif.likes ? istif.likes.length : 0}
+            <b>Likes:</b> {istif.likeSize}
           </p>
           <p className="istif-details">
             <b>Labels:</b> {istif.labels.join(", ")}
@@ -77,7 +64,10 @@ function MyIstifs() {
             <a href={"/user/" + istif.user.id}>{istif.user.username}</a>
           </p>
           <p className="istif-details">
-            <b>Published at:</b> {formatDate(istif.createdAt)}
+            <b>Published at:</b> {istif.createdAt}
+          </p>
+          <p className="istif-details">
+            <b>Relevant Date:</b> {istif.istifDate}
           </p>
           <button
             className="delete-button"
@@ -90,5 +80,6 @@ function MyIstifs() {
     </div>
   );
 }
+
 
 export default MyIstifs;

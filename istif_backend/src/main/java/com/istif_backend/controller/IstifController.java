@@ -5,6 +5,7 @@ import com.istif_backend.model.User;
 import com.istif_backend.request.IstifCreateRequest;
 import com.istif_backend.request.IstifEditRequest;
 import com.istif_backend.request.LikeRequest;
+import com.istif_backend.response.SingleIstifResponse;
 import com.istif_backend.service.IstifService;
 import com.istif_backend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ public class IstifController {
 
     @GetMapping("/all")
     public ResponseEntity<?> findAllStories(HttpServletRequest request){
-        return ResponseEntity.ok(istifService.findAllByOrderByIdDesc());
+        return ResponseEntity.ok(istifService.findAllByShareFlagOrderByIdDesc(1));
     }
 
     @GetMapping("/recommended")
@@ -52,7 +53,7 @@ public class IstifController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getIstifById(@PathVariable Long id,HttpServletRequest request){
-        Istif foundIstif = istifService.getIstifByIstifId(id);
+        SingleIstifResponse foundIstif = istifService.retrieveIstif(id);
         if (foundIstif!=null) {
             return ResponseEntity.ok(foundIstif);
         }
