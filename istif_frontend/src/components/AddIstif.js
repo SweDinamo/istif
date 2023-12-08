@@ -15,8 +15,8 @@ const AddIstifForm = () => {
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   const [relevantDate, setRelevantDate] = useState(null);
-  const [dateFormat, setDateFormat] = useState("dd/MM/yyyy"); // Added state for date format
-  const [shareFlag, setShareFlag] = useState(0); // 0 for private, 1 for public
+  const [dateFormat, setDateFormat] = useState("");
+  const [shareFlag, setShareFlag] = useState(0);
   const navigate = useNavigate();
 
   const handleEditorChange = (value) => {
@@ -76,8 +76,6 @@ const AddIstifForm = () => {
         }
       );
       const newIstifId = response.data.id;
-      console.log(response);
-      console.log(`New Istif ID: ${newIstifId}`);
       navigate(`/istif/${newIstifId}`);
     } catch (error) {
       console.log(error);
@@ -151,19 +149,6 @@ const AddIstifForm = () => {
       <br />
       <br />
       <br />
-      <label className="add-story-label">
-        Relevant Date for Istif:
-        <DatePicker
-          selected={relevantDate}
-          onChange={handleRelevantDateChange}
-          dateFormat={dateFormat}
-          className="add-istif-datepicker"
-          showMonthYearPicker={dateFormat === "MM/yyyy"}
-          showYearPicker={dateFormat === "yyyy"}
-          showFullMonthYearPicker={dateFormat === "MM/yyyy"}
-        />
-      </label>
-      <br />
       <label className="add-istif-label">
         Date Format:
         <select
@@ -171,11 +156,27 @@ const AddIstifForm = () => {
           onChange={(e) => setDateFormat(e.target.value)}
           className="add-istif-select"
         >
+          <option value="">Please Select</option>
           <option value="dd/MM/yyyy">dd/MM/yyyy</option>
           <option value="MM/yyyy">MM/yyyy</option>
           <option value="yyyy">yyyy</option>
         </select>
       </label>
+      {dateFormat && (
+        <label className="add-story-label">
+          Relevant Date for Istif:
+          <DatePicker
+            selected={relevantDate}
+            onChange={handleRelevantDateChange}
+            dateFormat={dateFormat}
+            className="add-istif-datepicker"
+            showMonthYearPicker={dateFormat === "MM/yyyy"}
+            showYearPicker={dateFormat === "yyyy"}
+            showFullMonthYearPicker={dateFormat === "MM/yyyy"}
+          />
+        </label>
+      )}
+      <br />
       <br />
       <div className="slider-container">
         <label className={`switch ${shareFlag === 1 ? "public" : "private"}`}>
