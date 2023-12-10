@@ -9,7 +9,9 @@ function IstifDetails() {
   const { id } = useParams();
   const [istif, setIstif] = useState(null);
   const [commentText, setCommentText] = useState("");
+  const [currentUserId, setCurrentUserId] = useState(null);
 
+  // Fetch the istif details
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/api/istif/${id}`, {
@@ -23,14 +25,26 @@ function IstifDetails() {
       });
   }, [id]);
 
+  // Fetch the current user's profile
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/api/user/profile`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        setCurrentUserId(response.data.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
-
     const comment = {
       istifId: istif.id,
       commentText: commentText,
     };
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/comment/add`,
@@ -39,7 +53,6 @@ function IstifDetails() {
           withCredentials: true,
         }
       );
-      console.log(comment);
       const updatedIstif = { ...istif };
       updatedIstif.comments.push(response.data);
       setIstif(updatedIstif);
@@ -63,6 +76,7 @@ function IstifDetails() {
       console.log(error);
     }
   };
+
   const handleLikeComment = async (commentId) => {
     try {
       const response = await axios.post(
@@ -86,8 +100,26 @@ function IstifDetails() {
     }
   };
 
-  if (!istif) {
-    return <div>Istif Not Found!</div>;
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/api/comment/delete/${commentId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      const updatedIstif = {
+        ...istif,
+        comments: istif.comments.filter((comment) => comment.id !== commentId),
+      };
+      setIstif(updatedIstif);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (!istif || currentUserId === null) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -100,9 +132,7 @@ function IstifDetails() {
         </a>
       </h1>
       <p>
-        <b>Istif:</b>
-        <p></p>
-        {parse(istif.text)}
+        <b>Istif:</b> {parse(istif.text)}
       </p>
       <p>
         <b>Likes:</b> {istif.likeSize}
@@ -111,15 +141,13 @@ function IstifDetails() {
       <p>
         <b>Labels:</b> {istif.labels.join(", ")}
       </p>
-      <b>Written by:</b>
+      <b>Written by:</b>{" "}
       <a href={"/user/" + istif.user.id}>{istif.user.username}</a>
       <p>
-        <b>Published at: </b>
-        {istif.createdAt}
+        <b>Published at:</b> {istif.createdAt}
       </p>
       <p>
-        <b>Relevant Date: </b>
-        {istif.istifDate}
+        <b>Relevant Date:</b> {istif.istifDate}
       </p>
       <p>
         <b>Comments:</b>
@@ -127,11 +155,14 @@ function IstifDetails() {
       <ul>
         {istif.comments.map((comment) => (
           <li key={comment.id}>
-            <b>Comment: </b>
-            {comment.text}
+            <b>Comment:</b> {comment.text}
             <p>
-              <b>Commented by: </b>
-              {comment.user.username}
+              <b>Commented by:</b> {comment.user.username}
+              {currentUserId === comment.user.id && (
+                <button onClick={() => handleDeleteComment(comment.id)}>
+                  Delete
+                </button>
+              )}
             </p>
             <p>
               <b>Likes:</b> {comment.likes ? comment.likes.length : 0}

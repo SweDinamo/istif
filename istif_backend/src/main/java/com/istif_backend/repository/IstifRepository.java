@@ -25,7 +25,6 @@ public interface IstifRepository extends JpaRepository<Istif,Long> {
 
     List<Istif> findByRelevantDateBetween(LocalDate formattedStartDate, LocalDate formattedEndDate);
 
-    List<Istif> findByRelevantDate(LocalDate formattedDate);
 
     List<Istif> findByCreatedAtAfterOrderByIdDesc(Date date);
 

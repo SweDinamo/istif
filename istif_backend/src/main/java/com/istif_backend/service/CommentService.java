@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class CommentService {
     @Autowired
     CommentRepository commentRepository;
+
 
     public Comment createComment(CommentRequest commentRequest, User user, Istif istif) {
         Comment comment = Comment.builder()
@@ -38,6 +40,10 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    public List<Comment> getCommentsByIstifId(Long storyId) {
+        return commentRepository.findAllByIstifId(storyId);
+    }
+
     public Comment getCommentByCommentId(Long commentId) {
         Optional<Comment> optionalComment = commentRepository.findById(commentId);
         if (optionalComment.isEmpty()) {
@@ -46,7 +52,15 @@ public class CommentService {
         return optionalComment.get();
     }
 
-    public void deleteComment(Comment comment){
+    public String deleteComment(Comment comment){
         commentRepository.delete(comment);
+        if(getCommentById(comment.getId()) == null){
+            return "comment deleted";
+        }
+        return "comment not deleted";
+    }
+
+    public Comment getCommentById(Long commentId) {
+        return commentRepository.getCommentById(commentId);
     }
 }

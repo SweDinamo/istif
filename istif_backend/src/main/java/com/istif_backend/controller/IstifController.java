@@ -29,12 +29,12 @@ public class IstifController {
     private UserService userService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> findAllStories(HttpServletRequest request){
+    public ResponseEntity<?> findAllIstifs(HttpServletRequest request){
         return ResponseEntity.ok(istifService.findAllByShareFlagOrderByIdDesc(1));
     }
 
     @GetMapping("/recommended")
-    public ResponseEntity<?> findFeedStories(HttpServletRequest request){
+    public ResponseEntity<?> findFeedIstifs(HttpServletRequest request){
         return ResponseEntity.ok(istifService.findRecommendedStories());
     }
 
@@ -46,7 +46,7 @@ public class IstifController {
     }
 
     @GetMapping("/fromUser")
-    public ResponseEntity<?> findAllStoriesfromUser(HttpServletRequest request){
+    public ResponseEntity<?> findAllIstifsfromUser(HttpServletRequest request){
         User user = userService.validateTokenizedUser(request);
         return ResponseEntity.ok(istifService.findByUserIdOrderByIdDesc(user.getId()));
     }
@@ -61,13 +61,13 @@ public class IstifController {
     }
 
     @GetMapping("/following")
-    public ResponseEntity<?> findAllStoriesfromFollowings(HttpServletRequest request){
+    public ResponseEntity<?> findAllIstifsfromFollowings(HttpServletRequest request){
         User tokenizedUser = userService.validateTokenizedUser(request);
         return ResponseEntity.ok(istifService.findFollowingStories(tokenizedUser));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchStories(
+    public ResponseEntity<?> searchIstifs(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate) throws ParseException {
@@ -109,7 +109,7 @@ public class IstifController {
     }
 
     @GetMapping("/liked")
-    public ResponseEntity<?> likedStories(HttpServletRequest request){
+    public ResponseEntity<?> likedIstifs(HttpServletRequest request){
         User tokenizedUser = userService.validateTokenizedUser(request);
         return ResponseEntity.ok(istifService.likedStories(tokenizedUser));
     }
