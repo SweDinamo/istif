@@ -30,6 +30,8 @@ public class Istif extends BaseEntity{
     @NotBlank
     private String titleLink;
 
+    private String source;
+
     @ElementCollection
     @Column
     private List<String> labels = new ArrayList<>();
@@ -44,10 +46,6 @@ public class Istif extends BaseEntity{
 
     @Column(name = "likes")
     private Set<Long> likes = new HashSet<>();
-
-    @Column(name = "created_at")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "Europe/Istanbul")
-    private Date createdAt  = new Date();
 
     @Column(name = "relevant_date")
     private LocalDate relevantDate;

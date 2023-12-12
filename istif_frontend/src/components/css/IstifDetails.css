@@ -1,0 +1,65 @@
+/* IstifDetails.css */
+
+.istif-details {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.istif-details h1, .all-istifs p {
+  margin-bottom: 15px;
+}
+
+.istif-details a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.istif-details a:hover {
+  text-decoration: underline;
+}
+
+.istif-details button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.istif-details button:hover {
+  background-color: #45a049;
+}
+
+.istif-details textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.istif-details ul {
+  list-style: none;
+  padding: 0;
+}
+
+.istif-details li {
+  background: #f9f9f9;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.istif-details li p {
+  margin-bottom: 10px;
+}

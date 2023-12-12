@@ -184,9 +184,17 @@ const IstifSearch = () => {
             <ul>
               {searchResults.map((result) => (
                 <li key={result.id}>
-                  <h2>
-                    <a href={`/istif/${result.id}`}>{result.title}</a>
-                  </h2>
+                  {result.length === 0 ? (
+                    <h2>No Istif Found!</h2>
+                  ) : (
+                    <h2>
+                      {result.id ? (
+                        <a href={`/istif/${result.id}`}>{result.title}</a>
+                      ) : (
+                        result.title
+                      )}
+                    </h2>
+                  )}
                 </li>
               ))}
             </ul>

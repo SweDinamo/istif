@@ -20,6 +20,7 @@ public class SingleIstifResponse{
     private String text;
     private String title;
     private String titleLink;
+    private String source;
     private List<String> labels;
 
     @JsonIncludeProperties(value = {"id" , "username"})
@@ -27,7 +28,7 @@ public class SingleIstifResponse{
 
     private List<Comment> comments;
 
-    private Set<Long> likes;
+    private Integer likeSize;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "Europe/Istanbul")
     private Date createdAt;
@@ -39,10 +40,11 @@ public class SingleIstifResponse{
         this.text = istif.getText();
         this.title = istif.getTitle();
         this.titleLink = istif.getTitleLink();
+        this.source = istif.getSource();
         this.labels = istif.getLabels();
         this.user = istif.getUser();
         this.comments = istif.getComments();
-        this.likes = istif.getLikes();
+        this.likeSize = istif.getLikes().size();
         this.createdAt = istif.getCreatedAt();
         this.istifDate = LocalDateParser.localDateToString(istif.getRelevantDate(),istif.getDateFlag());
     }

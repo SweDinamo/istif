@@ -14,6 +14,9 @@ public class LocalDateParser {
 
         DateTimeFormatter formatterFull = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try {
+            if(dateString == null){
+                return istif;
+            }
             istif.setRelevantDate(LocalDate.parse(dateString, formatterFull));
             istif.setDateFlag(3);
             return istif;

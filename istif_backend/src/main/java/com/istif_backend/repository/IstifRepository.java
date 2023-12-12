@@ -4,6 +4,7 @@ import com.istif_backend.model.Istif;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -29,4 +30,6 @@ public interface IstifRepository extends JpaRepository<Istif,Long> {
     List<Istif> findByCreatedAtAfterOrderByIdDesc(Date date);
 
     List<Istif> findAllByShareFlagOrderByIdDesc(Integer shareFlag);
+
+    List<Istif> findBySourceContainingIgnoreCase(String query);
 }

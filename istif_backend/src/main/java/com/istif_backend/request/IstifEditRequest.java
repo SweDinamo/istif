@@ -14,10 +14,12 @@ public class IstifEditRequest {
 
     private String titleLink;
 
+    private String source;
 
     private String header;
 
     private ArrayList<String> labels = new ArrayList<>();
+
     private String relevantDate;
 
     private Integer shareFlag;

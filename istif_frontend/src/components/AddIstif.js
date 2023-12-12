@@ -7,17 +7,45 @@ import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
+import TextField from "@mui/material/TextField";
+import Chip from "@mui/material/Chip";
 import "./css/AddIstif.css";
 
 const AddIstifForm = () => {
   const [titleLink, setTitleLink] = useState("");
   const [labels, setLabels] = useState("");
+  const [currentLabel, setCurrentLabel] = useState("");
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
+  const [source, setSource] = useState("");
   const [relevantDate, setRelevantDate] = useState(null);
   const [dateFormat, setDateFormat] = useState("");
   const [shareFlag, setShareFlag] = useState(0);
   const navigate = useNavigate();
+
+  const addLabel = () => {
+    if (currentLabel.trim() !== "") {
+      setLabels((prevLabels) => {
+        if (prevLabels) {
+          return prevLabels + `, ${currentLabel.trim()}`;
+        } else {
+          return currentLabel.trim();
+        }
+      });
+      setCurrentLabel("");
+    }
+  };
+
+  const removeLabel = (labelToRemove) => {
+    setLabels((prevLabels) => {
+      const updatedLabels = prevLabels
+        .split(",")
+        .map((label) => label.trim())
+        .filter((label) => label !== labelToRemove)
+        .join(", ");
+      return updatedLabels;
+    });
+  };
 
   const handleEditorChange = (value) => {
     setText(value);
@@ -25,6 +53,10 @@ const AddIstifForm = () => {
 
   const handleTitleChange = (value) => {
     setTitle(value);
+  };
+
+  const handleSourceChange = (value) => {
+    setSource(value);
   };
 
   const handleTitleLinkChange = (value) => {
@@ -63,6 +95,7 @@ const AddIstifForm = () => {
       title,
       labels: labels.split(","),
       text,
+      source,
       relevantDate: formattedRelevantDate,
       shareFlag,
     };
@@ -105,6 +138,13 @@ const AddIstifForm = () => {
     "image",
   ];
 
+  const handleLabelKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addLabel();
+    }
+  };
+
   return (
     <form className="add-istif-form" onSubmit={handleSubmit}>
       <label className="add-istif-label">
@@ -127,17 +167,43 @@ const AddIstifForm = () => {
       </label>
       <br />
       <label className="add-istif-label">
-        Labels:(comma separated)
+        Labels (optional) Click enter to add:
+        <TextField
+          fullWidth
+          value={currentLabel}
+          onChange={(e) => setCurrentLabel(e.target.value)}
+          onKeyDown={handleLabelKeyDown}
+          InputProps={{
+            endAdornment: (
+              <>
+                {labels &&
+                  labels
+                    .split(",")
+                    .map((label) => (
+                      <Chip
+                        key={label.trim()}
+                        label={label.trim()}
+                        onDelete={() => removeLabel(label.trim())}
+                        style={{ margin: "4px" }}
+                      />
+                    ))}
+              </>
+            ),
+          }}
+        />
+      </label>
+      <label className="add-istif-label">
+        <b>Source:</b> (optional)
         <input
           type="text"
           className="add-istif-input"
-          value={labels}
-          onChange={(e) => setLabels(e.target.value)}
+          value={source}
+          onChange={(e) => handleSourceChange(e.target.value)}
         />
       </label>
       <br />
       <label className="add-istif-label">
-        Kept Notes:
+        Description:
         <ReactQuill
           value={text}
           onChange={handleEditorChange}
@@ -163,7 +229,7 @@ const AddIstifForm = () => {
         </select>
       </label>
       {dateFormat && (
-        <label className="add-story-label">
+        <label className="add-istif-label">
           Relevant Date for Istif:
           <DatePicker
             selected={relevantDate}
@@ -184,7 +250,7 @@ const AddIstifForm = () => {
           <span className="slider round"></span>
         </label>
         <p className="toggle-label">
-          {shareFlag === 1 ? "Public!" : "Private!"}
+          {shareFlag === 1 ? "Istif will be Public!" : "Istif will be Private!"}
         </p>
       </div>
       <br />

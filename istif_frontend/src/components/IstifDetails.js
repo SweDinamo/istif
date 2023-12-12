@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
 import "react-quill/dist/quill.snow.css";
-import "./css/AllIstifs.css";
+import "./css/IstifDetails.css";
+import { formatTimeAgo } from "../App";
 
 function IstifDetails() {
   const { id } = useParams();
@@ -11,7 +12,7 @@ function IstifDetails() {
   const [commentText, setCommentText] = useState("");
   const [currentUserId, setCurrentUserId] = useState(null);
 
-  // Fetch the istif details
+  
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/api/istif/${id}`, {
@@ -25,7 +26,7 @@ function IstifDetails() {
       });
   }, [id]);
 
-  // Fetch the current user's profile
+  
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/api/user/profile`, {
@@ -123,7 +124,7 @@ function IstifDetails() {
   }
 
   return (
-    <div className="all-istifs">
+    <div className="istif-details">
       <h1>Title: {istif.title}</h1>
       <h1>
         Link:{" "}
@@ -132,10 +133,13 @@ function IstifDetails() {
         </a>
       </h1>
       <p>
+        <b>Source:</b> {istif.source}
+      </p>
+      <p>
         <b>Istif:</b> {parse(istif.text)}
       </p>
       <p>
-        <b>Likes:</b> {istif.likeSize}
+        <b>Likes:</b> {istif.likes ? istif.likes.length : 0}
       </p>
       <button onClick={handleLikeIstif}>Like!</button>
       <p>
@@ -144,11 +148,13 @@ function IstifDetails() {
       <b>Written by:</b>{" "}
       <a href={"/user/" + istif.user.id}>{istif.user.username}</a>
       <p>
-        <b>Published at:</b> {istif.createdAt}
+        <b>Created:</b> {formatTimeAgo(istif.createdAt)}
       </p>
-      <p>
-        <b>Relevant Date:</b> {istif.istifDate}
-      </p>
+      {istif.istifDate && (
+        <p>
+          <b>Relevant Date:</b> {istif.istifDate}
+        </p>
+      )}
       <p>
         <b>Comments:</b>
       </p>
@@ -156,6 +162,8 @@ function IstifDetails() {
         {istif.comments.map((comment) => (
           <li key={comment.id}>
             <b>Comment:</b> {comment.text}
+            <br></br>
+            <b>Published:</b> {formatTimeAgo(comment.createdAt)}
             <p>
               <b>Commented by:</b> {comment.user.username}
               {currentUserId === comment.user.id && (

@@ -1,68 +1,51 @@
-/* AddIstifForm.css */
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+}
 
+/* Form Styles */
 .add-istif-form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
 }
 
 .add-istif-label {
-  margin-bottom: 5px;
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
-.add-istif-input {
-  width: 500px;
-  height: 30px;
-  margin-bottom: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
+.add-istif-input,
+.add-istif-datepicker,
+.add-istif-select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 .add-istif-editor {
-  width: 800px;
-  height: 200px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 4px;
-}
-
-.add-istif-locations {
-  margin-bottom: 10px;
-}
-
-.add-istif-location-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-.add-istif-location-item {
-  margin-bottom: 5px;
-}
-
-.add-istif-datepicker {
-  width: 150px;
-  height: 30px;
-  padding: 5px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.add-istif-select {
-  width: 150px;
-  height: 30px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  .ql-editor {
+    min-height: 200px;
+  }
 }
 
 /* Toggle Button Styles */
 .slider-container {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .switch {
@@ -70,6 +53,7 @@
   display: inline-block;
   width: 60px;
   height: 34px;
+  margin-right: 10px;
 }
 
 .switch input {
@@ -103,11 +87,7 @@
 }
 
 input:checked + .slider {
-  background-color: #61a261;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #61a261;
+  background-color: #4caf50;
 }
 
 input:checked + .slider:before {
@@ -117,20 +97,32 @@ input:checked + .slider:before {
 }
 
 .toggle-label {
-  display: inline-block;
-  margin-left: 10px;
-  color: #333;
+  font-size: 16px;
 }
 
+/* Button Styles */
 .add-istif-button {
+  display: block;
+  width: 100%;
   padding: 10px 20px;
   background-color: #4caf50;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 .add-istif-button:hover {
   background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .add-istif-input,
+  .add-istif-datepicker,
+  .add-istif-select {
+    width: 100%;
+  }
 }

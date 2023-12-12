@@ -12,6 +12,7 @@ import com.istif_backend.response.SingleIstifResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -48,10 +49,10 @@ public class IstifService {
                 .title(istifCreateRequest.getTitle())
                 .titleLink(istifCreateRequest.getTitleLink())
                 .labels(istifCreateRequest.getLabels())
+                .source(istifCreateRequest.getSource())
                 .text(imageService.parseAndSaveImages(istifCreateRequest.getText()))
                 .user(foundUser)
                 .shareFlag(istifCreateRequest.getShareFlag())
-                .createdAt(new Date())
                 .likes(new HashSet<>())
                 .build();
         Istif modifiedIstif = LocalDateParser.parseDate(istifCreateRequest.getRelevantDate(),createdIstif);
@@ -134,6 +135,7 @@ public class IstifService {
         Set<Istif> istifSet = new HashSet<>();
         istifSet.addAll(istifRepository.findByTitleContainingIgnoreCase(query));
         istifSet.addAll(istifRepository.findByLabelsContainingIgnoreCase(query));
+        istifSet.addAll(istifRepository.findBySourceContainingIgnoreCase(query));
         return istifSet;
     }
 
@@ -211,6 +213,8 @@ public class IstifService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(timeStamp.length() < 5){
             timeStamp += "-01-01";
+        } else if (timeStamp.isBlank()) {
+            return null;
         }
         return dateFormat.parse(timeStamp);
 
@@ -220,6 +224,8 @@ public class IstifService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(timeStamp.length() < 5){
             timeStamp += "-12-31";
+        } else if (timeStamp.isBlank()) {
+            return null;
         }
         return dateFormat.parse(timeStamp);
 
@@ -230,6 +236,7 @@ public class IstifService {
                 .title(fetchTitle(istifEditRequest.getTitle()))
                 .titleLink(istifEditRequest.getTitle())
                 .labels(istifEditRequest.getLabels())
+                .source(istifEditRequest.getSource())
                 .text(imageService.parseAndSaveImages(istifEditRequest.getText()))
                 .user(foundUser)
                 .likes(new HashSet<>())
@@ -262,15 +269,6 @@ public class IstifService {
             }
         }
         return istifList;
-    }
-
-    public List<IstifListResponse> findByUserIdAndShareFlagOrderByIdDesc(Long userId, int shareFlag){
-        List<Istif> istifList = istifRepository.findByUserIdAndShareFlagOrderByIdDesc(userId,shareFlag);
-        List<IstifListResponse> istifResponseList = new ArrayList<>();
-        for(Istif istif: istifList){
-            istifResponseList.add(new IstifListResponse(istif));
-        }
-        return istifResponseList;
     }
 
     public String fetchTitle(String url) {
@@ -306,5 +304,39 @@ public class IstifService {
             istifResponseList.add(new IstifListResponse(istif));
         }
         return istifResponseList;
+    }
+
+    public List<IstifListResponse> searchIstifs(String query,String startDate,String endDate) throws ParseException {
+        Set<Istif> istifSet = new HashSet<>();
+        if(query != null && !query.isEmpty() && !query.isBlank()){
+            istifSet.addAll(searchIstifsWithQuery(query));
+        }
+        if(startDate != null && !startDate.isBlank() && !startDate.isEmpty()){
+            istifSet.addAll(searchIstifsWithDate(startDate));
+            if(endDate != null && !endDate.isBlank() && !endDate.isEmpty()){
+                istifSet.addAll(searchIstifsWithMultipleDate(startDate,endDate));
+            }
+        }
+        List<Istif> publicIstifList = istifRepository.findAllByShareFlagOrderByIdDesc(1);
+        istifSet.retainAll(publicIstifList);
+        if(istifSet.isEmpty()){
+            List<IstifListResponse> istifListResponse = new ArrayList<>();
+            istifListResponse.add(new IstifListResponse());
+            return istifListResponse;
+        }
+        return istifListToIstifListResponse(istifSet.stream().toList());
+    }
+
+    public List<IstifListResponse> istifListToIstifListResponse(List<Istif> istifList){
+        List<IstifListResponse> istifListResponse = new ArrayList<>();
+        for(Istif istif: istifList){
+            istifListResponse.add(new IstifListResponse(istif));
+        }
+        return istifListResponse;
+    }
+
+    public List<Istif> shareFlagCheck(List<Istif> istifList){
+        istifList.removeIf(istif -> istif.getShareFlag() != 1);
+        return istifList;
     }
 }

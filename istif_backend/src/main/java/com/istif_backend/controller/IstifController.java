@@ -5,6 +5,7 @@ import com.istif_backend.model.User;
 import com.istif_backend.request.IstifCreateRequest;
 import com.istif_backend.request.IstifEditRequest;
 import com.istif_backend.request.LikeRequest;
+import com.istif_backend.response.IstifListResponse;
 import com.istif_backend.response.SingleIstifResponse;
 import com.istif_backend.service.IstifService;
 import com.istif_backend.service.UserService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -71,23 +73,9 @@ public class IstifController {
             @RequestParam(required = false) String query,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate) throws ParseException {
-        Set<Istif> istifSet = new HashSet<>();
-        if(query != null){
-            istifSet.addAll(istifService.searchIstifsWithQuery(query));
-        }
-        if(startDate != null){
-            istifSet.addAll(istifService.searchIstifsWithDate(startDate));
-            if(endDate != null){
-                istifSet.addAll(istifService.searchIstifsWithMultipleDate(startDate,endDate));
-            }
-        }
-
-        if(istifSet.isEmpty()){
-            Set<String> nullSet = new HashSet<>();
-            nullSet.add("No istif found!");
-            return ResponseEntity.ok(nullSet);
-        }
-        return ResponseEntity.ok(Objects.requireNonNullElse(istifSet, "No istifs with this search is found!"));
+        List<IstifListResponse> istifList = istifService.searchIstifs(query,startDate,endDate);
+        IstifListResponse emptyResponse = new IstifListResponse();
+        return ResponseEntity.ok(Objects.requireNonNullElse(istifList, "No istifs with this search is found!"));
     }
     @PostMapping("/like")
     public ResponseEntity<?> likeIstif(@RequestBody LikeRequest likeRequest, HttpServletRequest request){

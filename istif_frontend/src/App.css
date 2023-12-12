@@ -1,26 +1,45 @@
+/* App.css */
+
 body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
 }
 
-.nav {
+.app-header {
   background-color: #417b5a;
-  color: #fff;
   display: flex;
-  justify-content: space-evenly;
-  padding: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
 }
 
-.logo {
-  width: 50px;
+.logo-link .logo {
+  width: 60px;
   height: auto;
+  margin-bottom: 10px;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .nav-link {
-  margin-left: 10px;
+  display: inline-block;
+  margin-left: 15px;
   color: #fff;
   text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #355a47;
 }
 
 .istif-container {
@@ -28,13 +47,16 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  flex-direction: column;
 }
 
 .istif-image {
-  max-width: 500px;
+  max-width: 300px;
   height: auto;
+  margin-bottom: 20px;
 }
 
+/* Styles for User Profile */
 .profile-container {
   margin: 20px;
   padding: 20px;
@@ -56,19 +78,27 @@ body {
   margin-bottom: 10px;
 }
 
-.follow-button {
-  margin-top: 10px;
+/* Button Styles */
+.follow-button,
+.add-istif-form button[type="submit"],
+.istif-details button,
+.search-form button[type="submit"] {
   padding: 5px 10px;
   background-color: #333;
   color: #fff;
   border: none;
   cursor: pointer;
+  border-radius: 4px;
 }
 
-.follow-button:hover {
+.follow-button:hover,
+.add-istif-form button[type="submit"]:hover,
+.istif-details button:hover,
+.search-form button[type="submit"]:hover {
   background-color: #555;
 }
 
+/* Styles for Adding Istifs */
 .add-istif-form {
   margin: 20px;
   padding: 20px;
@@ -85,20 +115,11 @@ body {
   width: 100%;
   padding: 5px;
   margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-.add-istif-form button[type="submit"] {
-  padding: 5px 10px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.add-istif-form button[type="submit"]:hover {
-  background-color: #555;
-}
-
+/* Styles for List of Istifs */
 .istif-list {
   margin: 20px;
 }
@@ -107,6 +128,7 @@ body {
   margin-bottom: 10px;
   padding: 10px;
   border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .istif-item h3 {
@@ -128,6 +150,7 @@ body {
   text-decoration: underline;
 }
 
+/* Styles for Istif Details */
 .istif-details {
   margin: 20px;
 }
@@ -165,20 +188,11 @@ body {
   width: 100%;
   padding: 5px;
   margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-.istif-details button {
-  padding: 5px 10px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.istif-details button:hover {
-  background-color: #555;
-}
-
+/* Styles for Search Form */
 .search-form {
   margin: 20px;
 }
@@ -192,21 +206,29 @@ body {
   width: 100%;
   padding: 5px;
   margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-.search-form button[type="submit"] {
-  padding: 5px 10px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.search-form button[type="submit"]:hover {
-  background-color: #555;
-}
-
+/* Styles for Error Messages */
 .error {
   color: red;
   margin-bottom: 10px;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .app-header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .logo-link .logo {
+    margin-bottom: 0;
+  }
+
+  .nav-bar {
+    flex-grow: 1;
+    justify-content: center;
+  }
 }

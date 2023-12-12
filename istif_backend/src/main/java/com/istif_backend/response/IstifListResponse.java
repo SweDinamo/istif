@@ -17,6 +17,7 @@ public class IstifListResponse{
     private Long id;
     private String title;
     private String titleLink;
+    private String source;
     private String text;
     private List<String> labels;
 
@@ -35,10 +36,15 @@ public class IstifListResponse{
         this.title = istif.getTitle();
         this.text = istif.getText();
         this.titleLink = istif.getTitleLink();
+        this.source = istif.getSource();
         this.labels = istif.getLabels();
         this.user = istif.getUser();
         this.likeSize = istif.getLikes().size();
         this.createdAt = istif.getCreatedAt();
         this.istifDate = LocalDateParser.localDateToString(istif.getRelevantDate(),istif.getDateFlag());
+    }
+
+    public IstifListResponse() {
+        this.title = "No istif found!";
     }
 }

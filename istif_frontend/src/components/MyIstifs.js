@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import parse from "html-react-parser";
 import "./css/AllIstifs.css";
+import { formatTimeAgo } from "../App";
 
 function MyIstifs() {
   const [myIstifs, setMyIstifs] = useState([]);
@@ -64,7 +65,7 @@ function MyIstifs() {
             <a href={"/user/" + istif.user.id}>{istif.user.username}</a>
           </p>
           <p className="istif-details">
-            <b>Published at:</b> {istif.createdAt}
+            <b>Created at:</b> {formatTimeAgo(istif.createdAt)}
           </p>
           <p className="istif-details">
             <b>Relevant Date:</b> {istif.istifDate}
