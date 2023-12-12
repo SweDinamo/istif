@@ -39,7 +39,7 @@ public class IstifListResponse{
         this.source = istif.getSource();
         this.labels = istif.getLabels();
         this.user = istif.getUser();
-        this.likeSize = istif.getLikes().size();
+        this.likeSize = (istif.getLikes() != null) ? istif.getLikes().size() : 0;
         this.createdAt = istif.getCreatedAt();
         this.istifDate = LocalDateParser.localDateToString(istif.getRelevantDate(),istif.getDateFlag());
     }
