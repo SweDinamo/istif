@@ -51,7 +51,7 @@ public class ImageService {
         return uploadImageToImgur(uploadedPhotoBytes,imgurClientId);
     }
 
-    private byte[] resizeImage(byte[] imageBytes, int targetFileSizeKB) throws IOException {
+    protected byte[] resizeImage(byte[] imageBytes, int targetFileSizeKB) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
         BufferedImage bufferedImage = ImageIO.read(bis);
 
@@ -71,7 +71,7 @@ public class ImageService {
         return bos.toByteArray();
     }
 
-    private String uploadImageToImgur(byte[] imageBytes, String imgurClientId) throws IOException {
+    protected String uploadImageToImgur(byte[] imageBytes, String imgurClientId) throws IOException {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
