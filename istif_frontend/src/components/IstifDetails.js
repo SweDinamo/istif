@@ -155,6 +155,11 @@ function IstifDetails() {
           <b>Relevant Date:</b> {istif.istifDate}
         </p>
       )}
+      {istif.editedAt && (
+        <p>
+          <b>Edited At:</b> {formatTimeAgo(istif.editedAt)}
+        </p>
+      )}
       <p>
         <b>Comments:</b>
       </p>
