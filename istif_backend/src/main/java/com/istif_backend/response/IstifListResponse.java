@@ -29,6 +29,9 @@ public class IstifListResponse{
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "Europe/Istanbul")
     private Date createdAt;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "Europe/Istanbul")
+    private Date editedAt;
+
     private String istifDate;
 
     public IstifListResponse(Istif istif) {
@@ -42,6 +45,7 @@ public class IstifListResponse{
         this.likeSize = (istif.getLikes() != null) ? istif.getLikes().size() : 0;
         this.createdAt = istif.getCreatedAt();
         this.istifDate = LocalDateParser.localDateToString(istif.getRelevantDate(),istif.getDateFlag());
+        this.editedAt = istif.getEditedAt();
     }
 
     public IstifListResponse() {

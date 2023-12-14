@@ -32,6 +32,10 @@ public class Istif extends BaseEntity{
 
     private String source;
 
+    @Column(name = "edited_at")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "Europe/Istanbul")
+    private Date editedAt;
+
     @ElementCollection
     @Column
     private List<String> labels = new ArrayList<>();

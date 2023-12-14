@@ -12,7 +12,6 @@ import com.istif_backend.response.SingleIstifResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -185,21 +184,6 @@ public class IstifService {
         return calendar.getTime();
     }
 
-    private Date setToLastDayOfYear(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-
-        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
-        calendar.set(Calendar.DAY_OF_MONTH, 31);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-
-        return calendar.getTime();
-    }
-
     public String deleteByIstifId(Istif istif) {
         List<Comment> commentList = istif.getComments();
         for (Comment comment: commentList) {
@@ -231,32 +215,27 @@ public class IstifService {
 
     }
 
-    public Istif enterIstif(User foundUser, IstifEditRequest istifEditRequest) throws ParseException, IOException {
-        return Istif.builder()
-                .title(fetchTitle(istifEditRequest.getTitle()))
-                .titleLink(istifEditRequest.getTitle())
-                .labels(istifEditRequest.getLabels())
-                .source(istifEditRequest.getSource())
-                .text(imageService.parseAndSaveImages(istifEditRequest.getText()))
-                .user(foundUser)
-                .likes(new HashSet<>())
-                .build();
-    }
-
     public Istif editIstif(IstifEditRequest request, User user, Long istifId) throws ParseException, IOException {
-        Istif istif = getIstifByIstifId(istifId);
-        if(Objects.equals(istif.getUser().getId(),user.getId())){
-            Istif enteredIstif = enterIstif(user,request);
-            enteredIstif.setId(istifId);
-            enteredIstif.setLikes(istif.getLikes());
-            enteredIstif.setLabels(istif.getLabels());
-            enteredIstif.setId(istif.getId());
-            enteredIstif.setComments(istif.getComments());
-            enteredIstif.setShareFlag(istif.getShareFlag());
-            enteredIstif.setRelevantDate(istif.getRelevantDate());
-            return istifRepository.save(enteredIstif);
+        Istif foundIstif = getIstifByIstifId(istifId);
+        if(Objects.equals(foundIstif.getUser().getId(),user.getId())){
+            Istif istif = LocalDateParser.parseDate(request.getIstifDate(),foundIstif);
+            istif.setEditedAt(new Date());
+            istif.setText(request.getText());
+            istif.setTitle(request.getTitle());
+            istif.setLabels(request.getLabels());
+            istif.setShareFlag(request.getShareFlag());
+            if(request.getTitle() == null || (request.getTitle().isEmpty() || request.getTitle().isBlank())){
+                String title = fetchTitle(request.getTitleLink());
+                if(!title.isEmpty()){
+                    istif.setTitle(title);
+                }
+                else{
+                    istif.setTitle(istif.getTitleLink());
+                }
+            }
+            return istifRepository.save(istif);
         }
-        return null;
+        return foundIstif;
     }
 
     public List<Istif> likedStories(User foundUser) {

@@ -1,50 +1,101 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import "quill-emoji/dist/quill-emoji.css";
 import DatePicker from "react-datepicker";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
-import "react-datepicker/dist/react-datepicker.css";
 import TextField from "@mui/material/TextField";
 import Chip from "@mui/material/Chip";
+import { format } from "date-fns";
+import { useParams, useNavigate } from "react-router-dom";
+import { message } from "antd";
+import "react-quill/dist/quill.snow.css";
+import "react-datepicker/dist/react-datepicker.css";
 import "./css/AddIstif.css";
 
-const AddIstifForm = () => {
+const EditIstifForm = () => {
+  const { id } = useParams();
+  const [messageApi] = message.useMessage();
+  const [title, setTitle] = useState("");
   const [titleLink, setTitleLink] = useState("");
-  const [labels, setLabels] = useState("");
+  const [labels, setLabels] = useState([]);
   const [currentLabel, setCurrentLabel] = useState("");
   const [text, setText] = useState("");
-  const [title, setTitle] = useState("");
   const [source, setSource] = useState("");
-  const [relevantDate, setRelevantDate] = useState(null);
-  const [dateFormat, setDateFormat] = useState("");
+  const [istifDate, setIstifDate] = useState(null);
+  const [formerRelevantDate, setFormerRelevantDate] = useState(null);
+  const [dateFormat, setDateFormat] = useState(null);
   const [shareFlag, setShareFlag] = useState(0);
   const navigate = useNavigate();
 
+  const fetchIstifData = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/api/istif/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      const existingIstif = response.data;
+
+      setTitle(existingIstif.title);
+      setLabels(existingIstif.labels);
+      setTitleLink(existingIstif.titleLink);
+      setText(existingIstif.text);
+      setSource(existingIstif.source);
+      setIstifDate(null);
+      setFormerRelevantDate(existingIstif.istifDate);
+      setShareFlag(existingIstif.shareFlag);
+    } catch (error) {
+      console.error("Error fetching Istif data:", error);
+      messageApi.open({
+        type: "error",
+        content: "Error occurred while fetching the Istif data!",
+      });
+    }
+  }, [id, messageApi]);
+
+  useEffect(() => {
+    fetchIstifData();
+  }, [id, fetchIstifData]);
+
   const addLabel = () => {
     if (currentLabel.trim() !== "") {
-      setLabels((prevLabels) => {
-        if (prevLabels) {
-          return prevLabels + `, ${currentLabel.trim()}`;
-        } else {
-          return currentLabel.trim();
-        }
-      });
+      setLabels([...labels, currentLabel.trim()]);
       setCurrentLabel("");
     }
   };
 
   const removeLabel = (labelToRemove) => {
-    setLabels((prevLabels) => {
-      const updatedLabels = prevLabels
-        .split(",")
-        .map((label) => label.trim())
-        .filter((label) => label !== labelToRemove)
-        .join(", ");
-      return updatedLabels;
-    });
+    setLabels(labels.filter((label) => label !== labelToRemove));
+  };
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+  ];
+
+  const handleLabelKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addLabel();
+    }
   };
 
   const handleEditorChange = (value) => {
@@ -79,69 +130,39 @@ const AddIstifForm = () => {
     setShareFlag((prevFlag) => (prevFlag === 0 ? 1 : 0));
   };
 
-  const handleRelevantDateChange = (date) => {
-    setRelevantDate(date);
+  const handleIstifDateChange = (date) => {
+    setIstifDate(date);
   };
+
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formattedRelevantDate = relevantDate
-      ? format(relevantDate, dateFormat.replace(/d/g, "d").replace(/y/g, "y"))
+    const formattedIstifDate = istifDate
+      ? format(istifDate, dateFormat.replace(/d/g, "d").replace(/y/g, "y"))
       : null;
 
-    const istif = {
-      titleLink,
+    const istifData = {
+      id,
       title,
-      labels: labels.split(","),
+      titleLink,
+      labels,
       text,
       source,
-      relevantDate: formattedRelevantDate,
-      shareFlag,
+      istifDate: formattedIstifDate,
+      shareFlag
     };
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/istif/add`,
-        istif,
-        {
-          withCredentials: true,
-        }
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/istif/edit/${id}`,
+        istifData,
+        { withCredentials: true }
       );
-      const newIstifId = response.data.id;
-      navigate(`/istif/${newIstifId}`);
+      navigate(`/istif/${id}`);
     } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-  ];
-
-  const handleLabelKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addLabel();
+      console.error("Error updating Istif:", error);
     }
   };
 
@@ -176,17 +197,14 @@ const AddIstifForm = () => {
           InputProps={{
             endAdornment: (
               <>
-                {labels &&
-                  labels
-                    .split(",")
-                    .map((label) => (
-                      <Chip
-                        key={label.trim()}
-                        label={label.trim()}
-                        onDelete={() => removeLabel(label.trim())}
-                        style={{ margin: "4px" }}
-                      />
-                    ))}
+                {labels.map((label) => (
+                  <Chip
+                    key={label}
+                    label={label}
+                    onDelete={() => removeLabel(label)}
+                    style={{ margin: "4px" }}
+                  />
+                ))}
               </>
             ),
           }}
@@ -215,6 +233,11 @@ const AddIstifForm = () => {
       <br />
       <br />
       <br />
+      {formerRelevantDate && (
+        <p className="add-istif-select">
+          <b>Former Relevant Date:</b> {formerRelevantDate}
+        </p>
+      )}
       <label className="add-istif-label">
         Date Format for Relevant Date:(optional)
         <select
@@ -232,8 +255,8 @@ const AddIstifForm = () => {
         <label className="add-istif-label">
           Relevant Date for Istif:
           <DatePicker
-            selected={relevantDate}
-            onChange={handleRelevantDateChange}
+            selected={istifDate}
+            onChange={handleIstifDateChange}
             dateFormat={dateFormat}
             className="add-istif-datepicker"
             showMonthYearPicker={dateFormat === "MM/yyyy"}
@@ -246,7 +269,11 @@ const AddIstifForm = () => {
       <br />
       <div className="slider-container">
         <label className={`switch ${shareFlag === 1 ? "public" : "private"}`}>
-          <input type="checkbox" onChange={handleToggleChange} />
+          <input
+            type="checkbox"
+            checked={shareFlag === 1} // Checkbox reflects shareFlag value
+            onChange={handleToggleChange}
+          />
           <span className="slider round"></span>
         </label>
         <p className="toggle-label">
@@ -255,10 +282,10 @@ const AddIstifForm = () => {
       </div>
       <br />
       <button type="submit" className="add-istif-button">
-        Add Istif
+        Update Istif
       </button>
     </form>
   );
 };
 
-export default AddIstifForm;
+export default EditIstifForm;

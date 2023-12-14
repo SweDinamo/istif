@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -35,6 +34,13 @@ public class SingleIstifResponse{
 
     private String istifDate;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "Europe/Istanbul")
+    private Date editedAt;
+
+    private Integer shareFlag;
+
+    private Integer dateFlag;
+
     public SingleIstifResponse(Istif istif) {
         this.id = istif.getId();
         this.text = istif.getText();
@@ -46,6 +52,9 @@ public class SingleIstifResponse{
         this.comments = istif.getComments();
         this.likeSize = istif.getLikes().size();
         this.createdAt = istif.getCreatedAt();
+        this.editedAt  = istif.getEditedAt();
         this.istifDate = LocalDateParser.localDateToString(istif.getRelevantDate(),istif.getDateFlag());
+        this.shareFlag = istif.getShareFlag();
+        this.dateFlag = istif.getDateFlag();
     }
 }

@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
@@ -59,19 +59,26 @@ class UserServiceTest {
     void testValidateTokenizedUser() {
 
         HttpServletRequest request = mock(HttpServletRequest.class);
+
         Cookie cookie = mock(Cookie.class);
+
         when(request.getCookies()).thenReturn(new Cookie[]{cookie});
+
         String token = "testToken";
+
         when(cookie.getName()).thenReturn("Bearer");
+
         when(cookie.getValue()).thenReturn(token);
+
         when(jwtUtil.extractId(token)).thenReturn(1L);
-        when(userRepository.findById(1L)).thenReturn(Optional.empty()); // Mocking an empty optional
+
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
 
         assertThrows(NoSuchElementException.class, () -> userService.validateTokenizedUser(request));
 
-
         verify(jwtUtil).extractId(token);
+
         verify(userRepository).findById(1L);
     }
 

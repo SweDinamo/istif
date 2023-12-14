@@ -8,6 +8,7 @@ import Profile from "./components/Profile";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AddIstifForm from "./components/AddIstif";
+import EditIstifForm from "./components/EditIstif"
 import MyIstifs from "./components/MyIstifs";
 import IstifDetails from "./components/IstifDetails";
 import AllIstifs from "./components/AllIstifs";
@@ -148,6 +149,7 @@ function App() {
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/istif/add-istif" element={<AddIstifForm />} />
+        <Route path="/istif/edit/:id" element={<EditIstifForm />} />
         <Route path="/istif/my-istifs" element={<MyIstifs />} />
         <Route path="/istif/followings" element={<FollowedUserIstifs />} />
         <Route path="/istif/all-istifs" element={<AllIstifs />} />
