@@ -224,6 +224,7 @@ public class IstifService {
             istif.setTitle(request.getTitle());
             istif.setLabels(request.getLabels());
             istif.setShareFlag(request.getShareFlag());
+            istif.setSource(request.getSource());
             if(request.getTitle() == null || (request.getTitle().isEmpty() || request.getTitle().isBlank())){
                 String title = fetchTitle(request.getTitleLink());
                 if(!title.isEmpty()){
