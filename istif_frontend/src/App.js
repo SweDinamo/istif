@@ -93,11 +93,11 @@ function App() {
           <img src={IstifLogo} alt="Logo" className="logo" />
         </Link>
         <nav className="nav-bar">
-          <Link to="/istif/all-istifs" className="nav-link">
-            Home
-          </Link>
           {loggedIn ? (
             <>
+              <Link to="/istif/all-istifs" className="nav-link">
+                Home
+              </Link>
               <Link to="/" onClick={handleLogout} className="nav-link">
                 Logout
               </Link>
@@ -122,6 +122,9 @@ function App() {
             </>
           ) : (
             <>
+              <Link to="/" className="nav-link">
+                Home
+              </Link>
               <Link to="/login" className="nav-link">
                 Login
               </Link>
