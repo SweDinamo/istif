@@ -5,6 +5,7 @@ import com.istif_backend.request.FollowRequest;
 import com.istif_backend.request.LoginRequest;
 import com.istif_backend.request.RegisterRequest;
 import com.istif_backend.request.UserUpdateRequest;
+import com.istif_backend.response.LoginResponse;
 import com.istif_backend.service.ImageService;
 import com.istif_backend.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -18,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/user")
@@ -59,7 +59,7 @@ public class UserController {
         cookie.setPath("/api");
         response.addCookie(cookie);
         foundUser.setProfilePhoto(null);
-        return ResponseEntity.ok(foundUser);
+        return ResponseEntity.ok(new LoginResponse(foundUser,token));
     }
 
 
