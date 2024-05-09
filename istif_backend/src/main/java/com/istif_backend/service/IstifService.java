@@ -55,9 +55,9 @@ public class IstifService {
                 .likes(new HashSet<>())
                 .build();
         Istif modifiedIstif = LocalDateParser.parseDate(istifCreateRequest.getRelevantDate(),createdIstif);
-        if(modifiedIstif.getTitle() == null || (modifiedIstif.getTitle().isEmpty() || modifiedIstif.getTitle().isBlank())){
+        if(istifCreateRequest.getTitle() == null || istifCreateRequest.getTitle().isBlank()){
             String title = fetchTitle(istifCreateRequest.getTitleLink());
-            if(!title.isEmpty()){
+            if(title != null && !title.isBlank()){
                 modifiedIstif.setTitle(title);
             }
             else{
