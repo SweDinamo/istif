@@ -237,10 +237,4 @@ public class IstifServiceTest {
         verify(istifRepository, times(1)).findByLabelsContainingIgnoreCase(query);
         verify(istifRepository, times(1)).findBySourceContainingIgnoreCase(query);
     }
-
-
-
-
-
 }
-

@@ -12,7 +12,7 @@ function IstifDetails() {
   const [commentText, setCommentText] = useState("");
   const [currentUserId, setCurrentUserId] = useState(null);
 
-  
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/api/istif/${id}`, {
@@ -26,7 +26,7 @@ function IstifDetails() {
       });
   }, [id]);
 
-  
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/api/user/profile`, {

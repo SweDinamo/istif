@@ -112,8 +112,4 @@ class CommentServiceTest {
         assertEquals("comment deleted", result);
         verify(commentRepository, times(1)).delete(mockComment);
     }
-
-
-
-
 }
