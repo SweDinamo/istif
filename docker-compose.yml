@@ -9,7 +9,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - ./istif_frontend/.env
+      - ./istif_backend/.env
     depends_on:
       - db
     volumes:
@@ -47,7 +47,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - ./istif_frontend/.env
+      - ./.env
     volumes:
       - db-data:/var/lib/postgresql/data
 
